@@ -10,7 +10,13 @@ function! s:messages() abort
   redir => contents
   messages
   redir END
-  return filter(split(contents, '\r\?\n')[1:], '!empty(v:val)')
+  let l:messages = filter(split(contents, '\r\?\n'), '!empty(v:val)')
+  " Remove a title message if exists
+  if l:messages[0] =~# '^Messages maintainer:'
+    return l:messages[1:]
+  else
+    return l:messages
+  endif
 endfunction
 
 Describe Vim.Prompt
@@ -140,16 +146,13 @@ Describe Vim.Prompt
   End
   Describe .clear()
     It fills up messages with empty strings
+      echomsg "foo"
+      echomsg "foo"
+      echomsg "foo"
+      echomsg "foo"
       call Prompt.clear()
-      redir => contents
-      messages
-      redir END
-      let lines = split(contents, "\n")
-      Assert Equals(len(lines), 201)
-      Assert Equals(lines, extend(
-            \ ['Messages maintainer: Bram Moolenaar <Bram@vim.org>'],
-            \ repeat([''], 200),
-            \))
+      let messages = s:messages()
+      Assert Equals(len(messages), 0)
     End
   End
 
