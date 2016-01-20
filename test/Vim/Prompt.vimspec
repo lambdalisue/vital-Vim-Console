@@ -12,7 +12,7 @@ function! s:messages() abort
   redir END
   let l:messages = filter(split(contents, '\r\?\n'), '!empty(v:val)')
   " Remove a title message if exists
-  if l:messages[0] =~# '^Messages maintainer:'
+  if get(l:messages, 0, '') =~# '^Messages maintainer:'
     return l:messages[1:]
   else
     return l:messages
