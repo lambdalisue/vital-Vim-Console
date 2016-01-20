@@ -1,9 +1,9 @@
 let s:V = vital#of('vital')
 
-function! s:true() abort
+function! TestVitalVimPromptTrue() abort
   return 1
 endfunction
-function! s:false() abort
+function! TestVitalVimPromptFalse() abort
   return 0
 endfunction
 function! s:messages() abort
@@ -28,6 +28,10 @@ Describe Vim.Prompt
           \}
     call Prompt.set_config(DEFAULT_CONFIG)
     call Prompt.clear()
+  End
+  After all
+    delfunction TestVitalVimPromptTrue
+    delfunction TestVitalVimPromptFalse
   End
 
   Describe .get_config()
@@ -89,10 +93,10 @@ Describe Vim.Prompt
       Assert True(Prompt.is_batch())
     End
     It executes {config}.batch and return if it is funcref
-      call Prompt.set_config({'batch': function('s:true')})
+      call Prompt.set_config({'batch': function('TestVitalVimPromptTrue')})
       Assert True(Prompt.is_batch())
 
-      call Prompt.set_config({'batch': function('s:false')})
+      call Prompt.set_config({'batch': function('TestVitalVimPromptFalse')})
       Assert False(Prompt.is_batch())
     End
   End
@@ -106,10 +110,10 @@ Describe Vim.Prompt
       Assert True(Prompt.is_debug())
     End
     It executes {config}.debug and return if it is funcref
-      call Prompt.set_config({'debug': function('s:true')})
+      call Prompt.set_config({'debug': function('TestVitalVimPromptTrue')})
       Assert True(Prompt.is_debug())
 
-      call Prompt.set_config({'debug': function('s:false')})
+      call Prompt.set_config({'debug': function('TestVitalVimPromptFalse')})
       Assert False(Prompt.is_debug())
     End
   End
