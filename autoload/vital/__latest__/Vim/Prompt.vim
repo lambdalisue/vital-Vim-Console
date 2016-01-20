@@ -89,11 +89,14 @@ function! s:inputlist(hl, textlist) abort
     echohl None
   endtry
 endfunction
+
+" @vimlint(EVL102, 1, l:i)
 function! s:clear() abort
   for i in range(201)
     echomsg ''
   endfor
 endfunction
+" @vimlint(EVL102, 0, l:i)
 
 function! s:debug(...) abort
   if !s:is_debug()
