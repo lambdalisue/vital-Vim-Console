@@ -4,7 +4,6 @@ set cpo&vim
 function! s:_vital_loaded(V) abort " {{{
   let s:Prelude = a:V.import('Prelude')
   let s:Dict = a:V.import('Data.Dict')
-  let s:Guard = a:V.import('Vim.Guard')
   let s:config = {
         \ 'debug': 0,
         \ 'batch': 0,
@@ -14,7 +13,6 @@ function! s:_vital_depends() abort " {{{
   return [
         \ 'Prelude',
         \ 'Data.Dict',
-        \ 'Vim.Guard',
         \]
 endfunction " }}}
 function! s:_ensure_string(x) abort
