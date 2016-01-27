@@ -4,6 +4,7 @@ set cpo&vim
 function! s:_vital_loaded(V) abort " {{{
   let s:Prelude = a:V.import('Prelude')
   let s:Dict = a:V.import('Data.Dict')
+  let s:Guard = a:V.import('Vim.Guard')
   let s:config = {
         \ 'debug': 0,
         \ 'batch': 0,
@@ -13,6 +14,7 @@ function! s:_vital_depends() abort " {{{
   return [
         \ 'Prelude',
         \ 'Data.Dict',
+        \ 'Vim.Guard',
         \]
 endfunction " }}}
 function! s:_ensure_string(x) abort
@@ -68,6 +70,7 @@ function! s:input(hl, msg, ...) abort
     return ''
   endif
   execute 'echohl' a:hl
+  call inputsave()
   try
     if empty(get(a:000, 1, ''))
       return input(a:msg, get(a:000, 0, ''))
@@ -76,6 +79,7 @@ function! s:input(hl, msg, ...) abort
     endif
   finally
     echohl None
+    call inputrestore()
   endtry
 endfunction
 function! s:inputlist(hl, textlist) abort
@@ -83,10 +87,12 @@ function! s:inputlist(hl, textlist) abort
     return 0
   endif
   execute 'echohl' a:hl
+  call inputsave()
   try
     return inputlist(a:textlist)
   finally
     echohl None
+    call inputrestore()
   endtry
 endfunction
 
