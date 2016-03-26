@@ -1,25 +1,34 @@
 let s:V = vital#of('vital')
 
-function! TestVitalVimPromptTrue() abort
-  return 1
-endfunction
-function! TestVitalVimPromptFalse() abort
-  return 0
-endfunction
-function! s:messages() abort
-  redir => contents
-  messages
-  redir END
-  let l:messages = filter(split(contents, '\r\?\n'), '!empty(v:val)')
-  " Remove a title message if exists
-  if get(l:messages, 0, '') =~# '^Messages maintainer:'
-    return l:messages[1:]
-  else
-    return l:messages
-  endif
-endfunction
-
 Describe Vim.Prompt
+  Before all
+    function! TestVitalVimPromptTrue() abort
+      return 1
+    endfunction
+
+    function! TestVitalVimPromptFalse() abort
+      return 0
+    endfunction
+
+    function! s:messages() abort
+      redir => contents
+      messages
+      redir END
+      let l:messages = filter(split(contents, '\r\?\n'), '!empty(v:val)')
+      " Remove a title message if exists
+      if get(l:messages, 0, '') =~# '^Messages maintainer:'
+        return l:messages[1:]
+      else
+        return l:messages
+      endif
+    endfunction
+  End
+
+  After all
+    delfunction TestVitalVimPromptTrue
+    delfunction TestVitalVimPromptFalse
+  End
+
   Before
     let Prompt = s:V.import('Vim.Prompt')
     let DEFAULT_CONFIG = {
@@ -28,10 +37,6 @@ Describe Vim.Prompt
           \}
     call Prompt.set_config(DEFAULT_CONFIG)
     call Prompt.clear()
-  End
-  After all
-    delfunction TestVitalVimPromptTrue
-    delfunction TestVitalVimPromptFalse
   End
 
   Describe .get_config()
@@ -100,6 +105,7 @@ Describe Vim.Prompt
       Assert False(Prompt.is_batch())
     End
   End
+
   Describe .is_debug()
     It returns 0 if {config}.debug is 0
       call Prompt.set_config({'debug': 0})
@@ -128,6 +134,7 @@ Describe Vim.Prompt
       Assert Equals(messages, [])
     End
   End
+
   Describe .echomsg({hl}, {msg})
     It echomsg a {msg}
       redir => contents
@@ -138,16 +145,19 @@ Describe Vim.Prompt
       Assert Equals(messages, ['foo', 'bar'])
     End
   End
+
   Describe .input({hl}, {msg}[, {text}, {complete}])
     It returns '' while batch is 1
       Assert Equals(Prompt.input('None', 'foo'), '')
     End
   End
+
   Describe .inputlist({hl}, {msg}[, {text}, {complete}])
     It returns 0 while batch is 1
       Assert Equals(Prompt.inputlist('None', ['foo', 'bar']), 0)
     End
   End
+
   Describe .clear()
     It fills up messages with empty strings
       echomsg "foo"
@@ -160,17 +170,41 @@ Describe Vim.Prompt
     End
   End
 
+  Describe .title([{msg}, ...])
+    It echo messages with spaces
+      redir => contents
+      call Prompt.title('foo', 'bar', 0)
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
+
+      let messages = s:messages()
+      Assert Equals(messages, [])
+    End
+  End
+
+  Describe .attention([{msg}, ...])
+    It echo messages with spaces
+      redir => contents
+      call Prompt.attention('foo', 'bar', 0)
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
+
+      let messages = s:messages()
+      Assert Equals(messages, [])
+    End
+  End
+
   Describe .debug([{msg}, ...])
-    It echomsg messages with newlines if debug is 1
+    It echomsg messages with spaces if debug is 1
       call Prompt.set_config({'debug': 1})
 
       redir => contents
       call Prompt.debug('foo', 'bar', 0)
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', '0'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar', '0'])
+      Assert Equals(messages, ['foo bar 0'])
     End
     It does nothing if debug is 0
       call Prompt.set_config({'debug': 0})
@@ -184,37 +218,47 @@ Describe Vim.Prompt
       Assert Equals(messages, [])
     End
   End
+
   Describe .info([{msg}, ...])
-    It echomsg messages with newlines
+    It echomsg messages with spaces
       redir => contents
       call Prompt.info('foo', 'bar', 0)
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', '0'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar', '0'])
+      Assert Equals(messages, ['foo bar 0'])
     End
   End
+
   Describe .warn([{msg}, ...])
-    It echomsg messages with newlines
+    It echomsg messages with spaces
       redir => contents
       call Prompt.warn('foo', 'bar', 0)
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', '0'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar', '0'])
+      Assert Equals(messages, ['foo bar 0'])
     End
   End
+
   Describe .error([{msg}, ...])
-    It echomsg messages with newlines
+    It echomsg messages with spaces
       redir => contents
       call Prompt.error('foo', 'bar', 0)
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', '0'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar', '0'])
+      Assert Equals(messages, ['foo bar 0'])
+    End
+
+    It sets v:errmsg
+      redir => contents
+      call Prompt.error('foo', 'bar', 0)
+      redir END
+      Assert Equals(v:errmsg, 'foo bar 0')
     End
   End
 
@@ -223,15 +267,16 @@ Describe Vim.Prompt
       Assert Equals(Prompt.ask('foo'), '')
     End
   End
+
   Describe .select({msg}, {candidates}[, {canceled}])
     It returns {canceled} when batch is 1
       Assert Equals(Prompt.select('foo', ['foo', 'bar']), '')
     End
   End
+
   Describe .confirm({msg}[, {text}])
     It returns 0 when batch is 1
       Assert Equals(Prompt.confirm('foo'), 0)
     End
   End
 End
-
