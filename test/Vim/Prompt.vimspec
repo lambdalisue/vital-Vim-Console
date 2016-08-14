@@ -1,5 +1,3 @@
-let s:V = vital#of('vital')
-
 Describe Vim.Prompt
   Before all
     function! TestVitalVimPromptTrue() abort
@@ -30,7 +28,7 @@ Describe Vim.Prompt
   End
 
   Before
-    let Prompt = s:V.import('Vim.Prompt')
+    let Prompt = vital#vital#import('Vim.Prompt')
     let DEFAULT_CONFIG = {
           \ 'debug': 0,
           \ 'batch': 1,
@@ -58,18 +56,6 @@ Describe Vim.Prompt
       call Prompt.set_config({
             \ 'debug': 1,
             \ 'batch': 0,
-            \})
-      let config = Prompt.get_config()
-      Assert Equal(config, {
-            \ 'debug': 1,
-            \ 'batch': 0,
-            \})
-    End
-    It ignores unknown attributes
-      call Prompt.set_config({
-            \ 'debug': 1,
-            \ 'batch': 0,
-            \ 'unknown_attribute': 'bar',
             \})
       let config = Prompt.get_config()
       Assert Equal(config, {
@@ -124,25 +110,25 @@ Describe Vim.Prompt
     End
   End
 
-  Describe .echo({hl}, {msg})
+  Describe .echo({hl} [, {msg}...])
     It echo a {msg}
       redir => contents
-      call Prompt.echo('None', "foo\nbar")
+      call Prompt.echo('None', "foo", "bar")
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
       let messages = s:messages()
       Assert Equals(messages, [])
     End
   End
 
-  Describe .echomsg({hl}, {msg})
+  Describe .echomsg({hl} [, {msg}...])
     It echomsg a {msg}
       redir => contents
-      call Prompt.echomsg('None', "foo\nbar")
+      call Prompt.echomsg('None', "foo", "bar")
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar'])
+      Assert Equals(messages, ['foo bar'])
     End
   End
 
@@ -152,7 +138,7 @@ Describe Vim.Prompt
     End
   End
 
-  Describe .inputlist({hl}, {msg}[, {text}, {complete}])
+  Describe .inputlist({hl}, {textlist})
     It returns 0 while batch is 1
       Assert Equals(Prompt.inputlist('None', ['foo', 'bar']), 0)
     End
@@ -167,30 +153,6 @@ Describe Vim.Prompt
       call Prompt.clear()
       let messages = s:messages()
       Assert Equals(len(messages), 0)
-    End
-  End
-
-  Describe .title([{msg}, ...])
-    It echo messages with spaces
-      redir => contents
-      call Prompt.title('foo', 'bar', 0)
-      redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
-
-      let messages = s:messages()
-      Assert Equals(messages, [])
-    End
-  End
-
-  Describe .attention([{msg}, ...])
-    It echo messages with spaces
-      redir => contents
-      call Prompt.attention('foo', 'bar', 0)
-      redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
-
-      let messages = s:messages()
-      Assert Equals(messages, [])
     End
   End
 
@@ -216,18 +178,6 @@ Describe Vim.Prompt
 
       let messages = s:messages()
       Assert Equals(messages, [])
-    End
-  End
-
-  Describe .info([{msg}, ...])
-    It echomsg messages with spaces
-      redir => contents
-      call Prompt.info('foo', 'bar', 0)
-      redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
-
-      let messages = s:messages()
-      Assert Equals(messages, ['foo bar 0'])
     End
   End
 
@@ -277,6 +227,12 @@ Describe Vim.Prompt
   Describe .confirm({msg}[, {text}])
     It returns 0 when batch is 1
       Assert Equals(Prompt.confirm('foo'), 0)
+    End
+  End
+
+  Describe .capture({command})
+    It return messages of {command}
+      Assert Equals(Prompt.capture('echo "Hello"'), ['Hello'])
     End
   End
 End

@@ -1,6 +1,6 @@
 *vital-vim-prompt.txt*	        echo/echomsg/input library
 
-Version: 0.1.0
+Version: 0.2.0
 Author:  Alisue <lambdalisue@hashnote.net>	*Vital.Vim.Prompt-author*
 Support: Vim 7.3 and above
 License: MIT license  {{{
