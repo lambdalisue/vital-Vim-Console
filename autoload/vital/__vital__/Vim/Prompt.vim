@@ -186,11 +186,12 @@ function! s:confirm(msg, ...) abort
   if s:is_batch()
     return 0
   endif
+  let fname = s:_get_function_name(function('s:_confirm_complete'))
   let result = s:input(
         \ 'Question',
         \ printf('%s (y[es]/n[o]): ', a:msg),
         \ get(a:000, 0, ''),
-        \ 'customlist,VitalVimPromptConfirmComplete',
+        \ printf('customlist,%s', fname),
         \)
   while result !~? '^\%(y\%[es]\|n\%[o]\)$'
     redraw
@@ -203,16 +204,26 @@ function! s:confirm(msg, ...) abort
           \ 'Question',
           \ printf('%s (y[es]/n[o]): ', a:msg),
           \ get(a:000, 0, ''),
-          \ 'customlist,s:_confirm_complete',
+          \ printf('customlist,%s', fname),
           \)
   endwhile
   redraw
   return result =~? 'y\%[es]'
 endfunction
 
-function! VitalVimPromptConfirmComplete(arglead, cmdline, cursorpos) abort
+function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
   return filter(['yes', 'no'], 'v:val =~# ''^'' . a:arglead')
 endfunction
+
+if has('patch-7.4.1842')
+  function! s:_get_function_name(fn) abort
+    return get(a:fn, 'name')
+  endfunction
+else
+  function! s:_get_function_name(fn) abort
+    return matchstr(string(a:fn), 'function(''\zs.*\ze''')
+  endfunction
+endif
 
 let &cpo = s:save_cpo
 unlet! s:save_cpo
