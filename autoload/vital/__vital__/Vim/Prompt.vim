@@ -191,11 +191,13 @@ if has('patch-7.4.1738')
     messages clear
   endfunction
 else
+  " @vimlint(EVL102, 1, l:i)
   function! s:clear() abort
     for i in range(201)
       echomsg ''
     endfor
   endfunction
+  " @vimlint(EVL102, 0, l:i)
 endif
 
 function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
