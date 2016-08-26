@@ -17,6 +17,17 @@ FUNCTIONS			|Vital.Vim.Prompt-functions|
 INTRODUCTIONS				*Vital.Vim.Prompt-introductions*
 
 This module provides several utility functions for message such as |echo|.
+The basic usage is something like:
+
+>
+	let s:Prompt = vital#vital#import('Vim.Prompt')
+
+	if s:Prompt.ask('Do you like Vim?')
+	  call s:Prompt.echo('Title', 'I knew')
+	else
+	  call s:Prompt.error('What did you say?')
+	endif
+<
 
 Latest version:
 https://github.com/lambdalisue/vital-Prompt

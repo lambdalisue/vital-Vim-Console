@@ -22,6 +22,15 @@ And call the following to bundle this plugin
 Usage
 -------------------------------------------------------------------------------
 
+```vim
+let s:Prompt = vital#vital#import('Vim.Prompt')
+if s:Prompt.ask('Do you like Vim?')
+    call s:Prompt.echo('Title', 'I knew')
+else
+    call s:Prompt.error('What did you say?')
+endif
+```
+
 
 License
 -------------------------------------------------------------------------------
