@@ -183,7 +183,7 @@ function! s:capture(command) abort
   finally
     redir END
   endtry
-  return split(content, '\r\?\n')
+  return split(content, '\r\?\n', 1)
 endfunction
 
 if has('patch-7.4.1738')

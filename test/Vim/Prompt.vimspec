@@ -232,7 +232,7 @@ Describe Vim.Prompt
 
   Describe .capture({command})
     It return messages of {command}
-      Assert Equals(Prompt.capture('echo "Hello"'), ['Hello'])
+      Assert Equals(Prompt.capture('echo "Hello"'), ['', 'Hello'])
     End
   End
 End
