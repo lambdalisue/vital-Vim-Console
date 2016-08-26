@@ -1,6 +1,6 @@
 *vital-vim-prompt.txt*				echo/echomsg/input library
 
-Version: 0.2.0
+Version: 1.0.0
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 7.3 and above
@@ -12,6 +12,7 @@ CONTENTS				*Vital.Vim.Prompt-contents*
 INTRODUCTIONS			|Vital.Vim.Prompt-introductions|
 USAGE				|Vital.Vim.Prompt-usage|
 FUNCTIONS			|Vital.Vim.Prompt-functions|
+CHANGELOG			|Vital.Vim.Prompt-changelog|
 
 ==============================================================================
 INTRODUCTIONS				*Vital.Vim.Prompt-introductions*
@@ -138,6 +139,12 @@ capture({command})
 clear()
 	Clear messages.
 
+
+==============================================================================
+CHANGELOG				*Vital.Vim.Prompt-changelog*
+
+1.0.0	2016-08-26
+	- Initial stable version
 
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
