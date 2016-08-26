@@ -1,50 +1,131 @@
-*vital-vim-prompt.txt*	        echo/echomsg/input library
+*vital-vim-prompt.txt*				echo/echomsg/input library
 
 Version: 0.2.0
-Author:  Alisue <lambdalisue@hashnote.net>	*Vital.Vim.Prompt-author*
+Author : Alisue <lambdalisue@hashnote.net>
+License: MIT license
 Support: Vim 7.3 and above
-License: MIT license  {{{
-	Copyright (c) 2016 Alisue, hashnote.net
-
-	Permission is hereby granted, free of charge, to any person obtaining
-	a copy of this software and associated documentation files
-	(the "Software"), to deal in the Software without restriction,
-	including without limitation the rights to use, copy, modify, merge,
-	publish, distribute, sublicense, and/or sell copies of the Software,
-	and to permit persons to whom the Software is furnished to do so,
-	subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be
-	included in all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-	CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-}}}
 
 
 ==============================================================================
 CONTENTS				*Vital.Vim.Prompt-contents*
 
-Introductions			|Vital.Vim.Prompt-introductions|
-Usage				|Vital.Vim.Prompt-usage|
-Functions			|Vital.Vim.Prompt-functions|
+INTRODUCTIONS			|Vital.Vim.Prompt-introductions|
+USAGE				|Vital.Vim.Prompt-usage|
+FUNCTIONS			|Vital.Vim.Prompt-functions|
 
 ==============================================================================
 INTRODUCTIONS				*Vital.Vim.Prompt-introductions*
 
+This module provides several utility functions for message such as |echo|.
 
-==============================================================================
-USAGE					*Vital.Vim.Prompt-usage*
+Latest version:
+https://github.com/lambdalisue/vital-Prompt
 
 
 ==============================================================================
 FUNCTIONS				*Vital.Vim.Prompt-functions*
 
+					*Vital.Vim.Prompt.get_config()*
+get_config()
+	Returns a config |Dictionary| which has
+
+	batch	A value used in |Vital.Vim.Prompt.is_batch()|, default 0.
+	debug	A value used in |Vital.Vim.Prompt.is_debug()|, default -1.
+
+					*Vital.Vim.Prompt.set_config()*
+set_config({config})
+	Apply {config} to the config.
+
+					*Vital.Vim.Prompt.is_batch()*
+is_batch()
+	Returns the 'batch' value of a config which is returned from
+	|Vital.Vim.Prompt.get_config()|.
+	Additionally, if 'batch' is a funcref, it returns the result of the
+	function rather than the value itself.
+
+					*Vital.Vim.Prompt.is_debug()*
+is_debug()
+	Returns the 'debug' value of a config which is returned from
+	|Vital.Vim.Prompt.get_config()|.
+	Additionally, if 'debug' is a funcref, it returns the result of the
+	function rather than the value itself.
+	Or if 'debug' is -1 (default), it return the value of 'verbose'
+	option.
+
+					*Vital.Vim.Prompt.echo()*
+echo({hl}[, {msg}...])
+	Execute |:echo| with {hl} (|highlight-groups|).
+	When multiple {msg} are specified, each {msg} are echoed individually.
+>
+	call s:Prompt.echo('None', 'a', 'b', 'c')
+	" a
+	" b
+	" c
+<
+					*Vital.Vim.Prompt.echomsg()*
+echomsg({hl}[, {msg}...])
+	Execute |:echomsg| with {hl} (|highlight-groups|).
+	When multiple {msg} are specified, each {msg} are echoed individually.
+
+					*Vital.Vim.Prompt.input()*
+input({hl}, {msg}[, {text}, {completion}])
+	Execute |:input| with {hl} (|highlight-groups|).
+	|inputsave()| and |inputrestore()| are used internally to guard
+	typeahead.
+	It does nothing and returns an empty string when
+	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+
+					*Vital.Vim.Prompt.inputlist()*
+inputlist({hl}, {textlist}])
+	Execute |:inputlist| with {hl} (|highlight-groups|).
+	|inputsave()| and |inputrestore()| are used internally to guard
+	typeahead.
+	It does nothing and returns an empty string when
+	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+
+					*Vital.Vim.Prompt.debug()*
+debug([{msg}...])
+	Echo {msg} by |:echomsg| with hl-Comment highlight group only when the
+	|Vital.Vim.Prompt.is_debug()| returns truthy value.
+
+					*Vital.Vim.Prompt.warn()*
+warn[{msg}...])
+	Echo {msg} by |:echomsg| with |hl-WarningMsg| highlight group.
+
+					*Vital.Vim.Prompt.error()*
+error([{msg}...])
+	Echo {msg} by |:echomsg| with |hl-ErrorMsg| highlight group.
+
+					*Vital.Vim.Prompt.ask()*
+ask({msg}[, {default}, {completion}])
+	Ask {msg} to users with |hl-Question| highlight group..
+	It does nothing and returns an empty string when
+	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+
+					*Vital.Vim.Prompt.select()*
+select({msg}, {candidates}[, {canceled}])
+	Ask users to select one of the {candidates} with |hl-Question|
+	highlight group.
+	When user cancel, the value of {canceled} is returned.
+	It does nothing and returns an empty string when
+	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+
+					*Vital.Vim.Prompt.confirm()*
+confirm({msg}[, {default}])
+	Confirm yes/no question to users.
+	It returns 1 if users answered yes.
+	The {default} is assigned to the default value of the |:input|.
+	It does nothing and returns an empty string when
+	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+
+					*Vital.Vim.Prompt.capture()*
+capture({command})
+	Capture messages for execution {command} and return a |List|.
+	Note that this method use |redir| internally.
+
+					*Vital.Vim.Prompt.clear()*
+clear()
+	Clear messages.
 
 
 ==============================================================================
