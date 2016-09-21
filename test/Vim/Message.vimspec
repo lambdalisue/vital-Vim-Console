@@ -1,10 +1,10 @@
-Describe Vim.Prompt
+Describe Vim.Message
   Before all
-    function! TestVitalVimPromptTrue() abort
+    function! TestVitalVimMessageTrue() abort
       return 1
     endfunction
 
-    function! TestVitalVimPromptFalse() abort
+    function! TestVitalVimMessageFalse() abort
       return 0
     endfunction
 
@@ -23,29 +23,29 @@ Describe Vim.Prompt
   End
 
   After all
-    delfunction TestVitalVimPromptTrue
-    delfunction TestVitalVimPromptFalse
+    delfunction TestVitalVimMessageTrue
+    delfunction TestVitalVimMessageFalse
   End
 
   Before
-    let Prompt = vital#vital#import('Vim.Prompt')
+    let Message = vital#vital#import('Vim.Message')
     let DEFAULT_CONFIG = {
           \ 'debug': 0,
           \ 'batch': 1,
           \}
-    call Prompt.set_config(DEFAULT_CONFIG)
-    call Prompt.clear()
+    call Message.set_config(DEFAULT_CONFIG)
+    call Message.clear()
   End
 
   Describe .get_config()
     It returns a copy of a config dictionary
-      let config = Prompt.get_config()
+      let config = Message.get_config()
       Assert IsDict(config)
       Assert KeyExists(config, 'debug')
       Assert KeyExists(config, 'batch')
       Assert Equal(config, DEFAULT_CONFIG)
 
-      let config2 = Prompt.get_config()
+      let config2 = Message.get_config()
       Assert Equal(config, config2)
       Assert NotSame(config, config2)
     End
@@ -53,21 +53,21 @@ Describe Vim.Prompt
 
   Describe .set_config({config})
     It overwrites existing config with {config}
-      call Prompt.set_config({
+      call Message.set_config({
             \ 'debug': 1,
             \ 'batch': 0,
             \})
-      let config = Prompt.get_config()
+      let config = Message.get_config()
       Assert Equal(config, {
             \ 'debug': 1,
             \ 'batch': 0,
             \})
     End
     It ignores missing attributes
-      call Prompt.set_config({
+      call Message.set_config({
             \ 'debug': 1,
             \})
-      let config = Prompt.get_config()
+      let config = Message.get_config()
       Assert Equal(config, extend(copy(DEFAULT_CONFIG), {
             \ 'debug': 1,
             \}))
@@ -76,44 +76,44 @@ Describe Vim.Prompt
 
   Describe .is_batch()
     It returns 0 if {config}.batch is 0
-      call Prompt.set_config({'batch': 0})
-      Assert False(Prompt.is_batch())
+      call Message.set_config({'batch': 0})
+      Assert False(Message.is_batch())
     End
     It returns 1 if {config}.batch is 1
-      call Prompt.set_config({'batch': 1})
-      Assert True(Prompt.is_batch())
+      call Message.set_config({'batch': 1})
+      Assert True(Message.is_batch())
     End
     It executes {config}.batch and return if it is funcref
-      call Prompt.set_config({'batch': function('TestVitalVimPromptTrue')})
-      Assert True(Prompt.is_batch())
+      call Message.set_config({'batch': function('TestVitalVimMessageTrue')})
+      Assert True(Message.is_batch())
 
-      call Prompt.set_config({'batch': function('TestVitalVimPromptFalse')})
-      Assert False(Prompt.is_batch())
+      call Message.set_config({'batch': function('TestVitalVimMessageFalse')})
+      Assert False(Message.is_batch())
     End
   End
 
   Describe .is_debug()
     It returns 0 if {config}.debug is 0
-      call Prompt.set_config({'debug': 0})
-      Assert False(Prompt.is_debug())
+      call Message.set_config({'debug': 0})
+      Assert False(Message.is_debug())
     End
     It returns 1 if {config}.debug is 1
-      call Prompt.set_config({'debug': 1})
-      Assert True(Prompt.is_debug())
+      call Message.set_config({'debug': 1})
+      Assert True(Message.is_debug())
     End
     It executes {config}.debug and return if it is funcref
-      call Prompt.set_config({'debug': function('TestVitalVimPromptTrue')})
-      Assert True(Prompt.is_debug())
+      call Message.set_config({'debug': function('TestVitalVimMessageTrue')})
+      Assert True(Message.is_debug())
 
-      call Prompt.set_config({'debug': function('TestVitalVimPromptFalse')})
-      Assert False(Prompt.is_debug())
+      call Message.set_config({'debug': function('TestVitalVimMessageFalse')})
+      Assert False(Message.is_debug())
     End
   End
 
   Describe .echo({hl} [, {msg}...])
     It echo a {msg}
       redir => contents
-      call Prompt.echo('None', "foo", "bar")
+      call Message.echo('None', "foo", "bar")
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
       let messages = s:messages()
@@ -124,7 +124,7 @@ Describe Vim.Prompt
   Describe .echomsg({hl} [, {msg}...])
     It echomsg a {msg}
       redir => contents
-      call Prompt.echomsg('None', "foo", "bar")
+      call Message.echomsg('None', "foo", "bar")
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
       let messages = s:messages()
@@ -134,13 +134,13 @@ Describe Vim.Prompt
 
   Describe .input({hl}, {msg}[, {text}, {complete}])
     It returns '' while batch is 1
-      Assert Equals(Prompt.input('None', 'foo'), '')
+      Assert Equals(Message.input('None', 'foo'), '')
     End
   End
 
   Describe .inputlist({hl}, {textlist})
     It returns 0 while batch is 1
-      Assert Equals(Prompt.inputlist('None', ['foo', 'bar']), 0)
+      Assert Equals(Message.inputlist('None', ['foo', 'bar']), 0)
     End
   End
 
@@ -150,7 +150,7 @@ Describe Vim.Prompt
       echomsg "foo"
       echomsg "foo"
       echomsg "foo"
-      call Prompt.clear()
+      call Message.clear()
       let messages = s:messages()
       Assert Equals(len(messages), 0)
     End
@@ -158,10 +158,10 @@ Describe Vim.Prompt
 
   Describe .debug([{msg}, ...])
     It echomsg messages with spaces if debug is 1
-      call Prompt.set_config({'debug': 1})
+      call Message.set_config({'debug': 1})
 
       redir => contents
-      call Prompt.debug('foo', 'bar', 0)
+      call Message.debug('foo', 'bar', 0)
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
@@ -169,10 +169,10 @@ Describe Vim.Prompt
       Assert Equals(messages, ['foo bar 0'])
     End
     It does nothing if debug is 0
-      call Prompt.set_config({'debug': 0})
+      call Message.set_config({'debug': 0})
 
       redir => contents
-      call Prompt.debug('foo', 'bar', 0)
+      call Message.debug('foo', 'bar', 0)
       redir END
       Assert Equals(split(contents, '\r\?\n'), [])
 
@@ -184,7 +184,7 @@ Describe Vim.Prompt
   Describe .warn([{msg}, ...])
     It echomsg messages with spaces
       redir => contents
-      call Prompt.warn('foo', 'bar', 0)
+      call Message.warn('foo', 'bar', 0)
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
@@ -196,7 +196,7 @@ Describe Vim.Prompt
   Describe .error([{msg}, ...])
     It echomsg messages with spaces
       redir => contents
-      call Prompt.error('foo', 'bar', 0)
+      call Message.error('foo', 'bar', 0)
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo bar 0'])
 
@@ -206,7 +206,7 @@ Describe Vim.Prompt
 
     It sets v:errmsg
       redir => contents
-      call Prompt.error('foo', 'bar', 0)
+      call Message.error('foo', 'bar', 0)
       redir END
       Assert Equals(v:errmsg, 'foo bar 0')
     End
@@ -214,25 +214,25 @@ Describe Vim.Prompt
 
   Describe .ask({msg}[, {text}, {complete}])
     It returns '' when batch is 1
-      Assert Equals(Prompt.ask('foo'), '')
+      Assert Equals(Message.ask('foo'), '')
     End
   End
 
   Describe .select({msg}, {candidates}[, {canceled}])
     It returns {canceled} when batch is 1
-      Assert Equals(Prompt.select('foo', ['foo', 'bar']), '')
+      Assert Equals(Message.select('foo', ['foo', 'bar']), '')
     End
   End
 
   Describe .confirm({msg}[, {text}])
     It returns 0 when batch is 1
-      Assert Equals(Prompt.confirm('foo'), 0)
+      Assert Equals(Message.confirm('foo'), 0)
     End
   End
 
   Describe .capture({command})
     It return messages of {command}
-      Assert Equals(Prompt.capture('echo "Hello"'), ['', 'Hello'])
+      Assert Equals(Message.capture('echo "Hello"'), ['', 'Hello'])
     End
   End
 End

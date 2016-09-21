@@ -1,4 +1,4 @@
-*vital-vim-prompt.txt*				echo/echomsg/input library
+*vital-vim-message.txt*				echo/echomsg/input library
 
 Version: 1.0.0
 Author : Alisue <lambdalisue@hashnote.net>
@@ -7,141 +7,141 @@ Support: Vim 7.3 and above
 
 
 ==============================================================================
-CONTENTS				*Vital.Vim.Prompt-contents*
+CONTENTS				*Vital.Vim.Message-contents*
 
-INTRODUCTIONS			|Vital.Vim.Prompt-introductions|
-USAGE				|Vital.Vim.Prompt-usage|
-FUNCTIONS			|Vital.Vim.Prompt-functions|
-CHANGELOG			|Vital.Vim.Prompt-changelog|
+INTRODUCTIONS			|Vital.Vim.Message-introductions|
+USAGE				|Vital.Vim.Message-usage|
+FUNCTIONS			|Vital.Vim.Message-functions|
+CHANGELOG			|Vital.Vim.Message-changelog|
 
 ==============================================================================
-INTRODUCTIONS				*Vital.Vim.Prompt-introductions*
+INTRODUCTIONS				*Vital.Vim.Message-introductions*
 
 This module provides several utility functions for message such as |echo|.
 The basic usage is something like:
 
 >
-	let s:Prompt = vital#vital#import('Vim.Prompt')
+	let s:Message = vital#vital#import('Vim.Message')
 
-	if s:Prompt.ask('Do you like Vim?')
-	  call s:Prompt.echo('Title', 'I knew')
+	if s:Message.ask('Do you like Vim?')
+	  call s:Message.echo('Title', 'I knew')
 	else
-	  call s:Prompt.error('What did you say?')
+	  call s:Message.error('What did you say?')
 	endif
 <
 
 Latest version:
-https://github.com/lambdalisue/vital-Prompt
+https://github.com/lambdalisue/vital-Message
 
 
 ==============================================================================
-FUNCTIONS				*Vital.Vim.Prompt-functions*
+FUNCTIONS				*Vital.Vim.Message-functions*
 
-					*Vital.Vim.Prompt.get_config()*
+					*Vital.Vim.Message.get_config()*
 get_config()
 	Returns a config |Dictionary| which has
 
-	batch	A value used in |Vital.Vim.Prompt.is_batch()|, default 0.
-	debug	A value used in |Vital.Vim.Prompt.is_debug()|, default -1.
+	batch	A value used in |Vital.Vim.Message.is_batch()|, default 0.
+	debug	A value used in |Vital.Vim.Message.is_debug()|, default -1.
 
-					*Vital.Vim.Prompt.set_config()*
+					*Vital.Vim.Message.set_config()*
 set_config({config})
 	Apply {config} to the config.
 
-					*Vital.Vim.Prompt.is_batch()*
+					*Vital.Vim.Message.is_batch()*
 is_batch()
 	Returns the 'batch' value of a config which is returned from
-	|Vital.Vim.Prompt.get_config()|.
+	|Vital.Vim.Message.get_config()|.
 	Additionally, if 'batch' is a funcref, it returns the result of the
 	function rather than the value itself.
 
-					*Vital.Vim.Prompt.is_debug()*
+					*Vital.Vim.Message.is_debug()*
 is_debug()
 	Returns the 'debug' value of a config which is returned from
-	|Vital.Vim.Prompt.get_config()|.
+	|Vital.Vim.Message.get_config()|.
 	Additionally, if 'debug' is a funcref, it returns the result of the
 	function rather than the value itself.
 	Or if 'debug' is -1 (default), it return the value of 'verbose'
 	option.
 
-					*Vital.Vim.Prompt.echo()*
+					*Vital.Vim.Message.echo()*
 echo({hl}[, {msg}...])
 	Execute |:echo| with {hl} (|highlight-groups|).
 	When multiple {msg} are specified, each {msg} are echoed individually.
 >
-	call s:Prompt.echo('None', 'a', 'b', 'c')
+	call s:Message.echo('None', 'a', 'b', 'c')
 	" a
 	" b
 	" c
 <
-					*Vital.Vim.Prompt.echomsg()*
+					*Vital.Vim.Message.echomsg()*
 echomsg({hl}[, {msg}...])
 	Execute |:echomsg| with {hl} (|highlight-groups|).
 	When multiple {msg} are specified, each {msg} are echoed individually.
 
-					*Vital.Vim.Prompt.input()*
+					*Vital.Vim.Message.input()*
 input({hl}, {msg}[, {text}, {completion}])
 	Execute |:input| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+	|Vital.Vim.Message.is_batch()| returns truthy value.
 
-					*Vital.Vim.Prompt.inputlist()*
+					*Vital.Vim.Message.inputlist()*
 inputlist({hl}, {textlist}])
 	Execute |:inputlist| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+	|Vital.Vim.Message.is_batch()| returns truthy value.
 
-					*Vital.Vim.Prompt.debug()*
+					*Vital.Vim.Message.debug()*
 debug([{msg}...])
 	Echo {msg} by |:echomsg| with hl-Comment highlight group only when the
-	|Vital.Vim.Prompt.is_debug()| returns truthy value.
+	|Vital.Vim.Message.is_debug()| returns truthy value.
 
-					*Vital.Vim.Prompt.warn()*
+					*Vital.Vim.Message.warn()*
 warn[{msg}...])
 	Echo {msg} by |:echomsg| with |hl-WarningMsg| highlight group.
 
-					*Vital.Vim.Prompt.error()*
+					*Vital.Vim.Message.error()*
 error([{msg}...])
 	Echo {msg} by |:echomsg| with |hl-ErrorMsg| highlight group.
 
-					*Vital.Vim.Prompt.ask()*
+					*Vital.Vim.Message.ask()*
 ask({msg}[, {default}, {completion}])
 	Ask {msg} to users with |hl-Question| highlight group..
 	It does nothing and returns an empty string when
-	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+	|Vital.Vim.Message.is_batch()| returns truthy value.
 
-					*Vital.Vim.Prompt.select()*
+					*Vital.Vim.Message.select()*
 select({msg}, {candidates}[, {canceled}])
 	Ask users to select one of the {candidates} with |hl-Question|
 	highlight group.
 	When user cancel, the value of {canceled} is returned.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+	|Vital.Vim.Message.is_batch()| returns truthy value.
 
-					*Vital.Vim.Prompt.confirm()*
+					*Vital.Vim.Message.confirm()*
 confirm({msg}[, {default}])
 	Confirm yes/no question to users.
 	It returns 1 if users answered yes.
 	The {default} is assigned to the default value of the |:input|.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Prompt.is_batch()| returns truthy value.
+	|Vital.Vim.Message.is_batch()| returns truthy value.
 
-					*Vital.Vim.Prompt.capture()*
+					*Vital.Vim.Message.capture()*
 capture({command})
 	Capture messages for execution {command} and return a |List|.
 	Note that this method use |redir| internally.
 
-					*Vital.Vim.Prompt.clear()*
+					*Vital.Vim.Message.clear()*
 clear()
 	Clear messages.
 
 
 ==============================================================================
-CHANGELOG				*Vital.Vim.Prompt-changelog*
+CHANGELOG				*Vital.Vim.Message-changelog*
 
 1.0.0	2016-08-26
 	- Initial stable version

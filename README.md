@@ -1,6 +1,6 @@
-vital-Vim-Prompt
+vital-Vim-Message
 ==============================================================================
-[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Prompt/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Prompt) [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Prompt/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Prompt/branch/master) ![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square) ![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Prompt-orange.svg?style=flat-square)](doc/vital-vim-prompt.txt)
+[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Message/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Message) [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Message/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Message/branch/master) ![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square) ![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Message-orange.svg?style=flat-square)](doc/vital-vim-message.txt)
 
 
 Introductions
@@ -10,24 +10,24 @@ Install
 -------------------------------------------------------------------------------
 
 ```vim
-NeoBundle 'lambdalisue/vital-Vim-Prompt'
+NeoBundle 'lambdalisue/vital-Vim-Message'
 ```
 
 And call the following to bundle this plugin
 
 ```vim
-:Vitalize . +Vim.Prompt
+:Vitalize . +Vim.Message
 ```
 
 Usage
 -------------------------------------------------------------------------------
 
 ```vim
-let s:Prompt = vital#vital#import('Vim.Prompt')
-if s:Prompt.ask('Do you like Vim?')
-    call s:Prompt.echo('Title', 'I knew')
+let s:Message = vital#vital#import('Vim.Message')
+if s:Message.ask('Do you like Vim?')
+    call s:Message.echo('Title', 'I knew')
 else
-    call s:Prompt.error('What did you say?')
+    call s:Message.error('What did you say?')
 endif
 ```
 

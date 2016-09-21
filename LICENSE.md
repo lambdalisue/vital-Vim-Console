@@ -1,4 +1,4 @@
-vital-Vim-Prompt
+vital-Vim-Message
 ==============================================================================
 The MIT License (MIT)
 
