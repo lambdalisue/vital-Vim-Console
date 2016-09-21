@@ -1,4 +1,4 @@
-*vital-vim-message.txt*				echo/echomsg/input library
+*vital-vim-console.txt*				echo/echomsg/input library
 
 Version: 1.0.0
 Author : Alisue <lambdalisue@hashnote.net>
@@ -7,141 +7,141 @@ Support: Vim 7.3 and above
 
 
 ==============================================================================
-CONTENTS				*Vital.Vim.Message-contents*
+CONTENTS				*Vital.Vim.Console-contents*
 
-INTRODUCTIONS			|Vital.Vim.Message-introductions|
-USAGE				|Vital.Vim.Message-usage|
-FUNCTIONS			|Vital.Vim.Message-functions|
-CHANGELOG			|Vital.Vim.Message-changelog|
+INTRODUCTIONS			|Vital.Vim.Console-introductions|
+USAGE				|Vital.Vim.Console-usage|
+FUNCTIONS			|Vital.Vim.Console-functions|
+CHANGELOG			|Vital.Vim.Console-changelog|
 
 ==============================================================================
-INTRODUCTIONS				*Vital.Vim.Message-introductions*
+INTRODUCTIONS				*Vital.Vim.Console-introductions*
 
 This module provides several utility functions for message such as |echo|.
 The basic usage is something like:
 
 >
-	let s:Message = vital#vital#import('Vim.Message')
+	let s:Console = vital#vital#import('Vim.Console')
 
-	if s:Message.ask('Do you like Vim?')
-	  call s:Message.echo('Title', 'I knew')
+	if s:Console.ask('Do you like Vim?')
+	  call s:Console.echo('Title', 'I knew')
 	else
-	  call s:Message.error('What did you say?')
+	  call s:Console.error('What did you say?')
 	endif
 <
 
 Latest version:
-https://github.com/lambdalisue/vital-Message
+https://github.com/lambdalisue/vital-Console
 
 
 ==============================================================================
-FUNCTIONS				*Vital.Vim.Message-functions*
+FUNCTIONS				*Vital.Vim.Console-functions*
 
-					*Vital.Vim.Message.get_config()*
+					*Vital.Vim.Console.get_config()*
 get_config()
 	Returns a config |Dictionary| which has
 
-	batch	A value used in |Vital.Vim.Message.is_batch()|, default 0.
-	debug	A value used in |Vital.Vim.Message.is_debug()|, default -1.
+	batch	A value used in |Vital.Vim.Console.is_batch()|, default 0.
+	debug	A value used in |Vital.Vim.Console.is_debug()|, default -1.
 
-					*Vital.Vim.Message.set_config()*
+					*Vital.Vim.Console.set_config()*
 set_config({config})
 	Apply {config} to the config.
 
-					*Vital.Vim.Message.is_batch()*
+					*Vital.Vim.Console.is_batch()*
 is_batch()
 	Returns the 'batch' value of a config which is returned from
-	|Vital.Vim.Message.get_config()|.
+	|Vital.Vim.Console.get_config()|.
 	Additionally, if 'batch' is a funcref, it returns the result of the
 	function rather than the value itself.
 
-					*Vital.Vim.Message.is_debug()*
+					*Vital.Vim.Console.is_debug()*
 is_debug()
 	Returns the 'debug' value of a config which is returned from
-	|Vital.Vim.Message.get_config()|.
+	|Vital.Vim.Console.get_config()|.
 	Additionally, if 'debug' is a funcref, it returns the result of the
 	function rather than the value itself.
 	Or if 'debug' is -1 (default), it return the value of 'verbose'
 	option.
 
-					*Vital.Vim.Message.echo()*
+					*Vital.Vim.Console.echo()*
 echo({hl}[, {msg}...])
 	Execute |:echo| with {hl} (|highlight-groups|).
 	When multiple {msg} are specified, each {msg} are echoed individually.
 >
-	call s:Message.echo('None', 'a', 'b', 'c')
+	call s:Console.echo('None', 'a', 'b', 'c')
 	" a
 	" b
 	" c
 <
-					*Vital.Vim.Message.echomsg()*
+					*Vital.Vim.Console.echomsg()*
 echomsg({hl}[, {msg}...])
 	Execute |:echomsg| with {hl} (|highlight-groups|).
 	When multiple {msg} are specified, each {msg} are echoed individually.
 
-					*Vital.Vim.Message.input()*
+					*Vital.Vim.Console.input()*
 input({hl}, {msg}[, {text}, {completion}])
 	Execute |:input| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Message.is_batch()| returns truthy value.
+	|Vital.Vim.Console.is_batch()| returns truthy value.
 
-					*Vital.Vim.Message.inputlist()*
+					*Vital.Vim.Console.inputlist()*
 inputlist({hl}, {textlist}])
 	Execute |:inputlist| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Message.is_batch()| returns truthy value.
+	|Vital.Vim.Console.is_batch()| returns truthy value.
 
-					*Vital.Vim.Message.debug()*
+					*Vital.Vim.Console.debug()*
 debug([{msg}...])
 	Echo {msg} by |:echomsg| with hl-Comment highlight group only when the
-	|Vital.Vim.Message.is_debug()| returns truthy value.
+	|Vital.Vim.Console.is_debug()| returns truthy value.
 
-					*Vital.Vim.Message.warn()*
+					*Vital.Vim.Console.warn()*
 warn[{msg}...])
 	Echo {msg} by |:echomsg| with |hl-WarningMsg| highlight group.
 
-					*Vital.Vim.Message.error()*
+					*Vital.Vim.Console.error()*
 error([{msg}...])
 	Echo {msg} by |:echomsg| with |hl-ErrorMsg| highlight group.
 
-					*Vital.Vim.Message.ask()*
+					*Vital.Vim.Console.ask()*
 ask({msg}[, {default}, {completion}])
 	Ask {msg} to users with |hl-Question| highlight group..
 	It does nothing and returns an empty string when
-	|Vital.Vim.Message.is_batch()| returns truthy value.
+	|Vital.Vim.Console.is_batch()| returns truthy value.
 
-					*Vital.Vim.Message.select()*
+					*Vital.Vim.Console.select()*
 select({msg}, {candidates}[, {canceled}])
 	Ask users to select one of the {candidates} with |hl-Question|
 	highlight group.
 	When user cancel, the value of {canceled} is returned.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Message.is_batch()| returns truthy value.
+	|Vital.Vim.Console.is_batch()| returns truthy value.
 
-					*Vital.Vim.Message.confirm()*
+					*Vital.Vim.Console.confirm()*
 confirm({msg}[, {default}])
 	Confirm yes/no question to users.
 	It returns 1 if users answered yes.
 	The {default} is assigned to the default value of the |:input|.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Message.is_batch()| returns truthy value.
+	|Vital.Vim.Console.is_batch()| returns truthy value.
 
-					*Vital.Vim.Message.capture()*
+					*Vital.Vim.Console.capture()*
 capture({command})
-	Capture messages for execution {command} and return a |List|.
+	Capture consoles for execution {command} and return a |List|.
 	Note that this method use |redir| internally.
 
-					*Vital.Vim.Message.clear()*
+					*Vital.Vim.Console.clear()*
 clear()
 	Clear messages.
 
 
 ==============================================================================
-CHANGELOG				*Vital.Vim.Message-changelog*
+CHANGELOG				*Vital.Vim.Console-changelog*
 
 1.0.0	2016-08-26
 	- Initial stable version

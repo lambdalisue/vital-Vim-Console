@@ -1,6 +1,6 @@
-vital-Vim-Message
+vital-Vim-Console
 ==============================================================================
-[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Message/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Message) [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Message/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Message/branch/master) ![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square) ![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Message-orange.svg?style=flat-square)](doc/vital-vim-message.txt)
+[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Console/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Console) [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Console/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Console/branch/master) ![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square) ![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Console-orange.svg?style=flat-square)](doc/vital-vim-console.txt)
 
 
 Introductions
@@ -10,24 +10,24 @@ Install
 -------------------------------------------------------------------------------
 
 ```vim
-NeoBundle 'lambdalisue/vital-Vim-Message'
+NeoBundle 'lambdalisue/vital-Vim-Console'
 ```
 
 And call the following to bundle this plugin
 
 ```vim
-:Vitalize . +Vim.Message
+:Vitalize . +Vim.Console
 ```
 
 Usage
 -------------------------------------------------------------------------------
 
 ```vim
-let s:Message = vital#vital#import('Vim.Message')
-if s:Message.ask('Do you like Vim?')
-    call s:Message.echo('Title', 'I knew')
+let s:Console = vital#vital#import('Vim.Console')
+if s:Console.ask('Do you like Vim?')
+    call s:Console.echo('Title', 'I knew')
 else
-    call s:Message.error('What did you say?')
+    call s:Console.error('What did you say?')
 endif
 ```
 
