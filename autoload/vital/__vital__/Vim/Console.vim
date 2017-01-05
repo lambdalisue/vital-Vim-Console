@@ -98,6 +98,11 @@ function! s:debug(...) abort
   call call('s:echomsg', ['Comment'] + a:000)
 endfunction
 
+" info([{msg}...])
+function! s:info(...) abort
+  call call('s:echomsg', ['None'] + a:000)
+endfunction
+
 " warn([{msg}...])
 function! s:warn(...) abort
   call call('s:echomsg', ['WarningMsg'] + a:000)
