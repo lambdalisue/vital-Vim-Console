@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:_vital_loaded(V) abort
+function! s:_vital_created(module) abort
   let s:config = {
         \ 'debug': -1,
         \ 'batch': 0,
@@ -181,15 +181,22 @@ function! s:confirm(msg, ...) abort
 endfunction
 
 " capture({command})
-function! s:capture(command) abort
-  try
-    redir => content
-    silent execute a:command
-  finally
-    redir END
-  endtry
-  return split(content, '\r\?\n', 1)
-endfunction
+if exists('*execute')
+  function! s:capture(command) abort
+    let content = execute(a:command)
+    return split(content, '\r\?\n', 1)
+  endfunction
+else
+  function! s:capture(command) abort
+    try
+      redir => content
+      silent execute a:command
+    finally
+      redir END
+    endtry
+    return split(content, '\r\?\n', 1)
+  endfunction
+endif
 
 if has('patch-7.4.1738')
   function! s:clear() abort
