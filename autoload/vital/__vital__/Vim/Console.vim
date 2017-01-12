@@ -90,7 +90,7 @@ function! s:ask(...) abort dict
   if s:_is_status_batch(self)
     return ''
   endif
-  let result = call('s:input', ['Question'] + a:000)
+  let result = call('s:input', ['Question'] + a:000, self)
   redraw
   return result
 endfunction
@@ -104,7 +104,7 @@ function! s:select(msg, candidates, ...) abort dict
         \ copy(a:candidates),
         \ 'v:key+1 . ''. '' . s:_ensure_string(v:val)'
         \)
-  let result = s:inputlist('Question', [a:msg] + candidates)
+  let result = self.inputlist('Question', [a:msg] + candidates)
   redraw
   return result == 0 ? canceled : a:candidates[result-1]
 endfunction
@@ -117,7 +117,7 @@ function! s:confirm(msg, ...) abort dict
         \ 'customlist,%s',
         \ s:_get_function_name(function('s:_confirm_complete'))
         \)
-  let result = s:input(
+  let result = self.input(
         \ 'Question',
         \ printf('%s (y[es]/n[o]): ', a:msg),
         \ get(a:000, 0, ''),
@@ -130,7 +130,7 @@ function! s:confirm(msg, ...) abort dict
       break
     endif
     call s:echo('Invalid input.', 'WarningMsg')
-    let result = s:input(
+    let result = self.input(
           \ 'Question',
           \ printf('%s (y[es]/n[o]): ', a:msg),
           \ get(a:000, 0, ''),
