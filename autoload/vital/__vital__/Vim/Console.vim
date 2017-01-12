@@ -32,7 +32,6 @@ function! s:is_debug() abort
   endif
 endfunction
 
-" echo({hl}[, {msg} ...])
 function! s:echo(hl, ...) abort
   let msg = join(map(copy(a:000), 's:_ensure_string(v:val)'))
   execute 'echohl' a:hl
@@ -43,7 +42,6 @@ function! s:echo(hl, ...) abort
   endtry
 endfunction
 
-" echomsg({hl}[, {msg} ...])
 function! s:echomsg(hl, ...) abort
   let msg = join(map(copy(a:000), 's:_ensure_string(v:val)'))
   execute 'echohl' a:hl
@@ -54,7 +52,6 @@ function! s:echomsg(hl, ...) abort
   endtry
 endfunction
 
-" input({hl}, {msg} [, {text} [, {completion}]])
 function! s:input(hl, msg, ...) abort
   if s:is_batch()
     return ''
@@ -74,7 +71,6 @@ function! s:input(hl, msg, ...) abort
   endtry
 endfunction
 
-" inputlist({hl}, {textlist})
 function! s:inputlist(hl, textlist) abort
   if s:is_batch()
     return 0
@@ -90,7 +86,6 @@ function! s:inputlist(hl, textlist) abort
   endtry
 endfunction
 
-" debug([{msg}...])
 function! s:debug(...) abort
   if !s:is_debug()
     return
@@ -98,17 +93,14 @@ function! s:debug(...) abort
   call call('s:echomsg', ['Comment'] + a:000)
 endfunction
 
-" info([{msg}...])
 function! s:info(...) abort
   call call('s:echomsg', ['None'] + a:000)
 endfunction
 
-" warn([{msg}...])
 function! s:warn(...) abort
   call call('s:echomsg', ['WarningMsg'] + a:000)
 endfunction
 
-" error([{msg}...])
 function! s:error(...) abort
   let v:errmsg = join(map(
         \ copy(a:000),
@@ -117,7 +109,6 @@ function! s:error(...) abort
   call call('s:echomsg', ['ErrorMsg'] + a:000)
 endfunction
 
-" ask({msg} [, {default} [, {completion}]])
 function! s:ask(msg, ...) abort
   if s:is_batch()
     return ''
@@ -132,7 +123,6 @@ function! s:ask(msg, ...) abort
   return result
 endfunction
 
-" select({msg}, {candidates} [, {canceled}])
 function! s:select(msg, candidates, ...) abort
   let canceled = get(a:000, 0, '')
   if s:is_batch()
@@ -147,7 +137,6 @@ function! s:select(msg, candidates, ...) abort
   return result == 0 ? canceled : a:candidates[result-1]
 endfunction
 
-" confirm({msg} [, {default}])
 function! s:confirm(msg, ...) abort
   if s:is_batch()
     return 0
@@ -180,7 +169,6 @@ function! s:confirm(msg, ...) abort
   return result =~? 'y\%[es]'
 endfunction
 
-" capture({command})
 if exists('*execute')
   function! s:capture(command) abort
     let content = execute(a:command)
