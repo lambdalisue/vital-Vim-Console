@@ -1,6 +1,6 @@
 *Vital/Vim/Console.txt*				echo/echomsg/input library
 
-Version: 1.1.0
+Version: 2.0.0
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 7.3.429 and above
@@ -13,7 +13,9 @@ CONTENTS				*Vital.Vim.Console-contents*
 INTRODUCTIONS			|Vital.Vim.Console-introductions|
 USAGE				|Vital.Vim.Console-usage|
 FUNCTIONS			|Vital.Vim.Console-functions|
+VARIABLES			|Vital.Vim.Console-variables|
 CHANGELOG			|Vital.Vim.Console-changelog|
+
 
 ==============================================================================
 INTRODUCTIONS				*Vital.Vim.Console-introductions*
@@ -25,7 +27,7 @@ The basic usage is something like:
 	let s:Console = vital#vital#import('Vim.Console')
 
 	if s:Console.ask('Do you like Vim?')
-	  call s:Console.echo('Title', 'I knew')
+	  call s:Console.info('I knew')
 	else
 	  call s:Console.error('What did you say?')
 	endif
@@ -34,47 +36,20 @@ The basic usage is something like:
 ==============================================================================
 FUNCTIONS				*Vital.Vim.Console-functions*
 
-					*Vital.Vim.Console.get_config()*
-get_config()
-	Returns a config |Dictionary| which has
-
-	batch	A value used in |Vital.Vim.Console.is_batch()|, default 0.
-	debug	A value used in |Vital.Vim.Console.is_debug()|, default -1.
-
-					*Vital.Vim.Console.set_config()*
-set_config({config})
-	Apply {config} to the config.
-
-					*Vital.Vim.Console.is_batch()*
-is_batch()
-	Returns the 'batch' value of a config which is returned from
-	|Vital.Vim.Console.get_config()|.
-	Additionally, if 'batch' is a funcref, it returns the result of the
-	function rather than the value itself.
-
-					*Vital.Vim.Console.is_debug()*
-is_debug()
-	Returns the 'debug' value of a config which is returned from
-	|Vital.Vim.Console.get_config()|.
-	Additionally, if 'debug' is a funcref, it returns the result of the
-	function rather than the value itself.
-	Or if 'debug' is -1 (default), it return the value of 'verbose'
-	option.
-
 					*Vital.Vim.Console.echo()*
-echo({hl}[, {msg}...])
+echo({msg}[, {hl}])
 	Execute |:echo| with {hl} (|highlight-groups|).
-	When multiple {msg} are specified, each {msg} are echoed individually.
 >
-	call s:Console.echo('None', 'a', 'b', 'c')
+	call s:Console.echo('a', 'None')
+	" a
+	call s:Console.echo("a\nb\nc", 'None')
 	" a
 	" b
 	" c
 <
 					*Vital.Vim.Console.echomsg()*
-echomsg({hl}[, {msg}...])
+echomsg({msg}[, {hl}])
 	Execute |:echomsg| with {hl} (|highlight-groups|).
-	When multiple {msg} are specified, each {msg} are echoed individually.
 
 					*Vital.Vim.Console.input()*
 input({hl}, {msg}[, {text}, {completion}])
@@ -82,58 +57,62 @@ input({hl}, {msg}[, {text}, {completion}])
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
 	It does nothing and returns an empty string when
-	|Vital.Vim.Console.is_batch()| returns truthy value.
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.inputlist()*
 inputlist({hl}, {textlist}])
 	Execute |:inputlist| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
-	It does nothing and returns an empty string when
-	|Vital.Vim.Console.is_batch()| returns truthy value.
+	It does nothing and returns 0 when
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.debug()*
-debug([{msg}...])
-	Echo {msg} by |:echomsg| with hl-Comment highlight group only when the
-	|Vital.Vim.Console.is_debug()| returns truthy value.
+debug({msg})
+	Echo {msg} by |:echomsg| with |hl-Comment| highlight group only when the
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_DEBUG| or
+	'verbose' option has set.
 
 					*Vital.Vim.Console.info()*
-info[{msg}...])
-	Echo {msg} by |:echomsg| with |hl-None| highlight group.
+info({msg})
+	Echo {msg} by |:echomsg| with |hl-Title| highlight group.
+	It assign {msg} to |v:statusmsg| as well.
 
 					*Vital.Vim.Console.warn()*
-warn[{msg}...])
+warn({msg})
 	Echo {msg} by |:echomsg| with |hl-WarningMsg| highlight group.
+	It assign {msg} to |v:warningmsg| as well.
 
 					*Vital.Vim.Console.error()*
-error([{msg}...])
+error({msg})
 	Echo {msg} by |:echomsg| with |hl-ErrorMsg| highlight group.
+	It assign {msg} to |v:errmsg| as well.
 
 					*Vital.Vim.Console.ask()*
 ask({msg}[, {default}, {completion}])
 	Ask {msg} to users with |hl-Question| highlight group..
 	It does nothing and returns an empty string when
-	|Vital.Vim.Console.is_batch()| returns truthy value.
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.select()*
 select({msg}, {candidates}[, {canceled}])
 	Ask users to select one of the {candidates} with |hl-Question|
 	highlight group.
 	When user cancel, the value of {canceled} is returned.
-	It does nothing and returns an empty string when
-	|Vital.Vim.Console.is_batch()| returns truthy value.
+	It does nothing and returns {canceled} when
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.confirm()*
 confirm({msg}[, {default}])
 	Confirm yes/no question to users.
 	It returns 1 if users answered yes.
 	The {default} is assigned to the default value of the |:input|.
-	It does nothing and returns an empty string when
-	|Vital.Vim.Console.is_batch()| returns truthy value.
+	It does nothing and returns 0 when
+	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.capture()*
 capture({command})
-	Capture consoles for execution {command} and return a |List|.
+	Capture messages for execution {command} and return a |List|.
 	Note that this method use |redir| internally if |execute()| function
 	is not available.
 
@@ -143,12 +122,32 @@ clear()
 
 
 ==============================================================================
+VARIABLES				*Vital.Vim.Console-variables*
+
+					*Vital.Vim.Console.status*
+status
+	Current status of the console. An empty value is assigned in default.
+	
+					*Vital.Vim.Console.STATUS_DEBUG*
+STATUS_DEBUG
+	Assign this constant value to |Vital.Vim.Console.status| to set debug
+	mode.
+	
+					*Vital.Vim.Console.STATUS_BATCH*
+STATUS_BATCH
+	Assign this constant value to |Vital.Vim.Console.status| to set batch
+	mode.
+	
+
+==============================================================================
 CHANGELOG				*Vital.Vim.Console-changelog*
 
 1.0.0	2016-08-26
 	- Initial stable version
 1.1.0	2017-01-05
 	- Add info() method to document
+2.0.0	2017-01-12
+	- Change API interface
 
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
