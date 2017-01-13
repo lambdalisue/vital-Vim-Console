@@ -38,8 +38,21 @@ Describe Vim.Console
     It echo a {msg}
       redir => contents
       call Console.echo("foo\nbar")
+      call Console.echo("foo\nbar")
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', 'foo', 'bar'])
+      let messages = s:messages()
+      Assert Equals(messages, [])
+    End
+  End
+
+  Describe .echon({msg}[, {hl}])
+    It echon a {msg}
+      redir => contents
+      call Console.echon("foo\nbar")
+      call Console.echon("foo\nbar")
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, [])
     End
@@ -49,10 +62,11 @@ Describe Vim.Console
     It echomsg a {msg}
       redir => contents
       call Console.echomsg("foo\nbar")
+      call Console.echomsg("foo\nbar")
       redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar'])
+      Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', 'foo', 'bar'])
       let messages = s:messages()
-      Assert Equals(messages, ['foo', 'bar'])
+      Assert Equals(messages, ['foo', 'bar', 'foo', 'bar'])
     End
   End
 

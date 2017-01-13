@@ -24,6 +24,14 @@ function! s:echo(msg, ...) abort
   echohl None
 endfunction
 
+function! s:echon(msg, ...) abort
+  let hl = get(a:000, 0, 'None')
+  let msg = s:_ensure_string(a:msg)
+  execute 'echohl' hl
+  echon msg
+  echohl None
+endfunction
+
 function! s:echomsg(msg, ...) abort
   let hl = get(a:000, 0, 'None')
   let msg = s:_ensure_string(a:msg)
