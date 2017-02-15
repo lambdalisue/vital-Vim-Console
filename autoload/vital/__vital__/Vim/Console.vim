@@ -18,9 +18,7 @@ function! s:echo(msg, ...) abort
   let hl = get(a:000, 0, 'None')
   let msg = s:_ensure_string(a:msg)
   execute 'echohl' hl
-  for line in split(msg, '\r\?\n')
-    echo line
-  endfor
+  echo msg
   echohl None
 endfunction
 
