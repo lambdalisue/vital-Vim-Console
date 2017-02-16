@@ -29,6 +29,7 @@ Describe Vim.Console
 
   Before
     let Console = vital#vital#import('Vim.Console')
+    let Console.prefix = ''
     let Console.status = Console.STATUS_BATCH
     call Console.clear()
     set verbose=0
@@ -44,10 +45,37 @@ Describe Vim.Console
       let messages = s:messages()
       Assert Equals(messages, [])
     End
+
+    It echo a {msg} with {prefix}
+      let Console.prefix = '[prefix] '
+      redir => contents
+      call Console.echo("foo\nbar")
+      call Console.echo("foo\nbar")
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), [
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \])
+      let messages = s:messages()
+      Assert Equals(messages, [])
+    End
   End
 
   Describe .echon({msg}[, {hl}])
     It echon a {msg}
+      redir => contents
+      call Console.echon("foo\nbar")
+      call Console.echon("foo\nbar")
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
+      let messages = s:messages()
+      Assert Equals(messages, [])
+    End
+
+    It echon a {msg} without {prefix}
+      let Console.prefix = '[prefix] '
       redir => contents
       call Console.echon("foo\nbar")
       call Console.echon("foo\nbar")
@@ -67,6 +95,27 @@ Describe Vim.Console
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', 'foo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, ['foo', 'bar', 'foo', 'bar'])
+    End
+
+    It echomsg a {msg} with {prefix}
+      let Console.prefix = '[prefix] '
+      redir => contents
+      call Console.echomsg("foo\nbar")
+      call Console.echomsg("foo\nbar")
+      redir END
+      Assert Equals(split(contents, '\r\?\n'), [
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \])
+      let messages = s:messages()
+      Assert Equals(messages, [
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \ '[prefix] foo',
+            \ '[prefix] bar',
+            \])
     End
   End
 

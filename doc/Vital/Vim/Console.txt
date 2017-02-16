@@ -46,10 +46,18 @@ echo({msg}[, {hl}])
 	" a
 	" b
 	" c
+	let s:Console.prefix = '[prefix] '
+	call s:Console.echo('a', 'None')
+	" [prefix] a
+	call s:Console.echo("a\nb\nc", 'None')
+	" [prefix] a
+	" [prefix] b
+	" [prefix] c
 <
 					*Vital.Vim.Console.echon()*
 echon({msg}[, {hl}])
 	Execute |:echon| with {hl} (|highlight-groups|).
+	Note that |Vital.Vim.Console.prefix| is not used for this method.
 	
 					*Vital.Vim.Console.echomsg()*
 echomsg({msg}[, {hl}])
@@ -129,6 +137,11 @@ clear()
 
 ==============================================================================
 VARIABLES				*Vital.Vim.Console-variables*
+
+					*Vital.Vim.Console.prefix*
+prefix
+	A prefix string used when message. An empty value i  assigned in
+	default.
 
 					*Vital.Vim.Console.status*
 status

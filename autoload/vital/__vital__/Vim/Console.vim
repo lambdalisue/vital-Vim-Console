@@ -12,17 +12,19 @@ function! s:_vital_created(module) abort
   lockvar a:module.STATUS_DEBUG
   lockvar a:module.STATUS_BATCH
   let a:module.status = ''
+  let a:module.prefix = ''
 endfunction
 
-function! s:echo(msg, ...) abort
+function! s:echo(msg, ...) abort dict
   let hl = get(a:000, 0, 'None')
   let msg = s:_ensure_string(a:msg)
+  let msg = s:_assign_prefix(a:msg, self.prefix)
   execute 'echohl' hl
   echo msg
   echohl None
 endfunction
 
-function! s:echon(msg, ...) abort
+function! s:echon(msg, ...) abort dict
   let hl = get(a:000, 0, 'None')
   let msg = s:_ensure_string(a:msg)
   execute 'echohl' hl
@@ -30,9 +32,10 @@ function! s:echon(msg, ...) abort
   echohl None
 endfunction
 
-function! s:echomsg(msg, ...) abort
+function! s:echomsg(msg, ...) abort dict
   let hl = get(a:000, 0, 'None')
   let msg = s:_ensure_string(a:msg)
+  let msg = s:_assign_prefix(a:msg, self.prefix)
   execute 'echohl' hl
   for line in split(msg, '\r\?\n')
     echomsg line
@@ -45,6 +48,7 @@ function! s:input(hl, msg, ...) abort dict
     return ''
   endif
   let msg = s:_ensure_string(a:msg)
+  let msg = s:_assign_prefix(a:msg, self.prefix)
   execute 'echohl' a:hl
   call inputsave()
   try
@@ -78,22 +82,22 @@ function! s:debug(msg) abort dict
   if !s:_is_status_debug(self)
     return
   endif
-  call s:echomsg(a:msg, 'Comment')
+  call self.echomsg(a:msg, 'Comment')
 endfunction
 
-function! s:info(msg) abort
+function! s:info(msg) abort dict
   let v:statusmsg = s:_ensure_string(a:msg)
-  call s:echomsg(a:msg, 'Title')
+  call self.echomsg(a:msg, 'Title')
 endfunction
 
-function! s:warn(msg) abort
+function! s:warn(msg) abort dict
   let v:warningmsg = s:_ensure_string(a:msg)
-  call s:echomsg(a:msg, 'WarningMsg')
+  call self.echomsg(a:msg, 'WarningMsg')
 endfunction
 
-function! s:error(msg) abort
+function! s:error(msg) abort dict
   let v:errmsg = s:_ensure_string(a:msg)
-  call s:echomsg(a:msg, 'ErrorMsg')
+  call self.echomsg(a:msg, 'ErrorMsg')
 endfunction
 
 function! s:ask(...) abort dict
@@ -146,7 +150,7 @@ function! s:confirm(msg, ...) abort dict
           \ completion,
           \)
     if type(result) != s:t_string
-      call s:echo('Canceled.', 'WarningMsg')
+      call self.echo('Canceled.', 'WarningMsg')
       return 0
     endif
     let result = empty(result) ? default : result
@@ -207,6 +211,10 @@ endfunction
 
 function! s:_ensure_string(x) abort
   return type(a:x) == s:t_string ? a:x : string(a:x)
+endfunction
+
+function! s:_assign_prefix(msg, prefix) abort
+  return join(map(split(a:msg, '\r\?\n'), 'a:prefix . v:val'), "\n")
 endfunction
 
 if has('patch-7.4.1842')
