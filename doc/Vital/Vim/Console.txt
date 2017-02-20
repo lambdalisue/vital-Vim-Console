@@ -68,6 +68,8 @@ input({hl}, {msg}[, {text}, {completion}])
 	Execute |:input| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
+	Not like a native |input()|, the {completion} can be a |Funcref|
+	which returns a list. Refer to |:command-completion| for detail.
 	It does nothing and returns an empty string when
 	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
