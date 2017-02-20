@@ -68,6 +68,7 @@ Describe Vim.Console
       redir => contents
       call Console.echon("foo\nbar")
       call Console.echon("foo\nbar")
+      echo ""
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
       let messages = s:messages()
@@ -79,6 +80,7 @@ Describe Vim.Console
       redir => contents
       call Console.echon("foo\nbar")
       call Console.echon("foo\nbar")
+      echo ""
       redir END
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
       let messages = s:messages()
