@@ -1,6 +1,6 @@
 *Vital/Vim/Console.txt*				echo/echomsg/input library
 
-Version: 2.1.0
+Version: 2.2.0
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 7.3.429 and above
