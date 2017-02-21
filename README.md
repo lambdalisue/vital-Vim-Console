@@ -2,7 +2,7 @@ vital-Vim-Console
 ==============================================================================
 [![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Console/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Console)
 [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Console/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Console/branch/master)
-![Version 2.2.0](https://img.shields.io/badge/version-2.2.0-yellow.svg?style=flat-square)
+![Version 2.2.1](https://img.shields.io/badge/version-2.2.1-yellow.svg?style=flat-square)
 ![Support Vim 7.3.429 or above](https://img.shields.io/badge/support-Vim%207.3.429%20or%20above-yellowgreen.svg?style=flat-square)
 ![Support Neovim 0.1.7 or above](https://img.shields.io/badge/support-Neovim%200.1.7%20or%20above-yellowgreen.svg?style=flat-square)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
