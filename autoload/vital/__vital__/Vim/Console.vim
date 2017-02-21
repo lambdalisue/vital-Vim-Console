@@ -146,7 +146,6 @@ function! s:confirm(msg, ...) abort dict
         \   : 'y[es]/n[o]'
   let result = 'invalid'
   while result !~? '^\%(y\%[es]\|n\%[o]\)$'
-    redraw
     let result = self.input(
           \ 'Question',
           \ printf('%s (%s): ', a:msg, choices),
@@ -154,11 +153,13 @@ function! s:confirm(msg, ...) abort dict
           \ function('s:_confirm_complete'),
           \)
     if type(result) != s:t_string
+      redraw | echo ''
       call self.echo('Canceled.', 'WarningMsg')
       return 0
     endif
     let result = empty(result) ? default : result
   endwhile
+  redraw | echo ''
   return result =~? 'y\%[es]'
 endfunction
 
