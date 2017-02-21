@@ -66,6 +66,7 @@ Describe Vim.Console
   Describe .echon({msg}[, {hl}])
     It echon a {msg}
       redir => contents
+      redraw
       call Console.echon("foo\nbar")
       call Console.echon("foo\nbar")
       echo ""
@@ -78,6 +79,7 @@ Describe Vim.Console
     It echon a {msg} without {prefix}
       let Console.prefix = '[prefix] '
       redir => contents
+      redraw
       call Console.echon("foo\nbar")
       call Console.echon("foo\nbar")
       echo ""
