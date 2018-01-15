@@ -84,7 +84,6 @@ inputlist({hl}, {textlist}])
 					*Vital.Vim.Console.debug()*
 debug({msg})
 	Echo {msg} by |:echomsg| with |hl-Comment| highlight group only when the
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_DEBUG| or
 	'verbose' option has set.
 
 					*Vital.Vim.Console.info()*
@@ -148,11 +147,6 @@ prefix
 					*Vital.Vim.Console.status*
 status
 	Current status of the console. An empty value is assigned in default.
-	
-					*Vital.Vim.Console.STATUS_DEBUG*
-STATUS_DEBUG
-	Assign this constant value to |Vital.Vim.Console.status| to set debug
-	mode.
 	
 					*Vital.Vim.Console.STATUS_BATCH*
 STATUS_BATCH

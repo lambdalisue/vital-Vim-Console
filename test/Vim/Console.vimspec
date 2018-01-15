@@ -148,18 +148,6 @@ Describe Vim.Console
   End
 
   Describe .debug({msg})
-    It echomsg a message when status is STATUS_DEBUG
-      let Console.status = Console.STATUS_DEBUG
-
-      redir => contents
-      call Console.debug('foo bar')
-      redir END
-      Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
-
-      let messages = s:messages()
-      Assert Equals(messages, ['foo bar'])
-    End
-
     It echomsg messages when &verbose > 0
       redir => contents
       verbose call Console.debug('foo bar')

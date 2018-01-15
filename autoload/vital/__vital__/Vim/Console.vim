@@ -2,14 +2,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:t_string = type('')
-let s:STATUS_DEBUG = 'debug'
 let s:STATUS_BATCH = 'batch'
 
 
 function! s:_vital_created(module) abort
-  let a:module.STATUS_DEBUG = s:STATUS_DEBUG
   let a:module.STATUS_BATCH = s:STATUS_BATCH
-  lockvar a:module.STATUS_DEBUG
   lockvar a:module.STATUS_BATCH
   let a:module.status = ''
   let a:module.prefix = ''
@@ -89,7 +86,7 @@ function! s:inputlist(hl, textlist) abort dict
 endfunction
 
 function! s:debug(msg) abort dict
-  if !s:_is_status_debug(self)
+  if !&verbose
     return
   endif
   call self.echomsg(a:msg, 'Comment')
@@ -198,15 +195,6 @@ endif
 
 function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
   return filter(['yes', 'no'], 'v:val =~# ''^'' . a:arglead')
-endfunction
-
-function! s:_is_status_debug(module) abort
-  if a:module.status ==# s:STATUS_DEBUG
-    return 1
-  elseif &verbose
-    return 1
-  endif
-  return 0
 endfunction
 
 function! s:_is_status_batch(module) abort
