@@ -70,6 +70,7 @@ input({hl}, {msg}[, {text}, {completion}])
 	typeahead.
 	Not like a native |input()|, the {completion} can be a |Funcref|
 	which returns a list. Refer to |:command-completion| for detail.
+	It returns 0 if users hit <Esc> to cancel.
 
 					*Vital.Vim.Console.inputlist()*
 inputlist({hl}, {textlist}])
@@ -134,6 +135,13 @@ prefix
 	A prefix string used when message. An empty value i  assigned in
 	default.
 	
+					*Vital.Vim.Console.escape_marker*
+escape_marker
+	A constant string used to check if users hit <Esc> in a prompt.
+	Usually the default value is unique enough so developers do not need
+	to change the value.
+	Note that the value is used in |cnoremap| directly without escaping.
+
 
 ==============================================================================
 CHANGELOG				*Vital.Vim.Console-changelog*

@@ -6,6 +6,10 @@ let s:t_string = type('')
 
 function! s:_vital_created(module) abort
   let a:module.prefix = ''
+  let a:module.escape_marker =
+        \ '=======================================' .
+        \ 'Vital.Vim.Console.ESCAPE.' . localtime() .
+        \ '======================================='
 endfunction
 
 function! s:echo(msg, ...) abort dict
@@ -52,12 +56,15 @@ function! s:input(hl, msg, ...) abort dict
   execute 'echohl' a:hl
   call inputsave()
   try
-    cnoremap <buffer> <Esc> <C-u>=====ESCAPE=====<CR>
+    execute printf(
+          \ 'silent cnoremap <buffer> <Esc> <C-u>%s<CR>',
+          \ self.escape_marker,
+          \)
     let result = call('input', [msg, text] + args)
-    return result ==# '=====ESCAPE=====' ? 0 : result
+    return result ==# self.escape_marker ? 0 : result
   finally
     redraw
-    cunmap <buffer> <Esc>
+    silent cunmap <buffer> <Esc>
     echohl None
     call inputrestore()
   endtry
