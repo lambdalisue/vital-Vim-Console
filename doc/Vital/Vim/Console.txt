@@ -1,10 +1,10 @@
 *Vital/Vim/Console.txt*				echo/echomsg/input library
 
-Version: 2.2.3
+Version: 3.0.0-dev
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
-Support: Vim 7.3.429 and above
-Support: Neovim 0.1.7 and above
+Support: Vim 8.0.0000 and above
+Support: Neovim 0.2.0 and above
 
 
 ==============================================================================
