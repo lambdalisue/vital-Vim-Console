@@ -1,8 +1,4 @@
-let s:save_cpo = &cpo
-set cpo&vim
-
 let s:t_string = type('')
-
 
 function! s:_vital_created(module) abort
   let a:module.prefix = ''
@@ -48,7 +44,7 @@ function! s:input(hl, msg, ...) abort dict
     let args = [
           \ type(a:2) == s:t_string
           \   ? a:2
-          \   : 'customlist,' . s:_get_function_name(a:2)
+          \   : 'customlist,' . get(a:2, 'name')
           \]
   else
     let args = []
@@ -161,16 +157,3 @@ endfunction
 function! s:_assign_prefix(msg, prefix) abort
   return join(map(split(a:msg, '\r\?\n'), 'a:prefix . v:val'), "\n")
 endfunction
-
-if has('patch-7.4.1842')
-  function! s:_get_function_name(fn) abort
-    return get(a:fn, 'name')
-  endfunction
-else
-  function! s:_get_function_name(fn) abort
-    return matchstr(string(a:fn), 'function(''\zs.*\ze''')
-  endfunction
-endif
-
-let &cpo = s:save_cpo
-unlet! s:save_cpo
