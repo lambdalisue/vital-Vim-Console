@@ -9,15 +9,12 @@ Describe Vim.Console
     endfunction
 
     function! s:messages() abort
-      redir => contents
-      messages
-      redir END
-      let l:messages = filter(split(contents, '\r\?\n'), '!empty(v:val)')
+      let contents = filter(split(execute('messages'), '\r\?\n'), '!empty(v:val)')
       " Remove a title console if exists
-      if get(l:messages, 0, '') =~# '^Messages maintainer:'
-        return l:messages[1:]
+      if get(contents, 0, '') =~# '^Messages maintainer:'
+        return contents[1:]
       else
-        return l:messages
+        return contents
       endif
     endfunction
   End
@@ -36,10 +33,10 @@ Describe Vim.Console
 
   Describe .echo({msg}[, {hl}])
     It echo a {msg}
-      redir => contents
-      call Console.echo("foo\nbar")
-      call Console.echo("foo\nbar")
-      redir END
+      let contents = execute([
+            \ 'call Console.echo("foo\nbar")',
+            \ 'call Console.echo("foo\nbar")',
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', 'foo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, [])
@@ -47,10 +44,10 @@ Describe Vim.Console
 
     It echo a {msg} with {prefix}
       let Console.prefix = '[prefix] '
-      redir => contents
-      call Console.echo("foo\nbar")
-      call Console.echo("foo\nbar")
-      redir END
+      let contents = execute([
+            \ 'call Console.echo("foo\nbar")',
+            \ 'call Console.echo("foo\nbar")',
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), [
             \ '[prefix] foo',
             \ '[prefix] bar',
@@ -64,12 +61,11 @@ Describe Vim.Console
 
   Describe .echon({msg}[, {hl}])
     It echon a {msg}
-      redir => contents
-      redraw
-      call Console.echon("foo\nbar")
-      call Console.echon("foo\nbar")
-      echo ""
-      redir END
+      let contents = execute([
+            \ 'call Console.echon("foo\nbar")',
+            \ 'call Console.echon("foo\nbar")',
+            \ 'echo ""'
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, [])
@@ -77,12 +73,11 @@ Describe Vim.Console
 
     It echon a {msg} without {prefix}
       let Console.prefix = '[prefix] '
-      redir => contents
-      redraw
-      call Console.echon("foo\nbar")
-      call Console.echon("foo\nbar")
-      echo ""
-      redir END
+      let contents = execute([
+            \ 'call Console.echon("foo\nbar")',
+            \ 'call Console.echon("foo\nbar")',
+            \ 'echo ""'
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'barfoo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, [])
@@ -91,10 +86,10 @@ Describe Vim.Console
 
   Describe .echomsg({hl} [, {msg}...])
     It echomsg a {msg}
-      redir => contents
-      call Console.echomsg("foo\nbar")
-      call Console.echomsg("foo\nbar")
-      redir END
+      let contents = execute([
+            \ 'call Console.echomsg("foo\nbar")',
+            \ 'call Console.echomsg("foo\nbar")',
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), ['foo', 'bar', 'foo', 'bar'])
       let messages = s:messages()
       Assert Equals(messages, ['foo', 'bar', 'foo', 'bar'])
@@ -102,10 +97,10 @@ Describe Vim.Console
 
     It echomsg a {msg} with {prefix}
       let Console.prefix = '[prefix] '
-      redir => contents
-      call Console.echomsg("foo\nbar")
-      call Console.echomsg("foo\nbar")
-      redir END
+      let contents = execute([
+            \ 'call Console.echomsg("foo\nbar")',
+            \ 'call Console.echomsg("foo\nbar")',
+            \], '')
       Assert Equals(split(contents, '\r\?\n'), [
             \ '[prefix] foo',
             \ '[prefix] bar',
@@ -177,9 +172,7 @@ Describe Vim.Console
 
   Describe .debug({msg})
     It echomsg messages when &verbose > 0
-      redir => contents
-      verbose call Console.debug('foo bar')
-      redir END
+      let contents = execute('verbose call Console.debug(''foo bar'')', '')
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
 
       let messages = s:messages()
@@ -187,9 +180,7 @@ Describe Vim.Console
     End
 
     It does nothing otherwise
-      redir => contents
-      call Console.debug('foo bar')
-      redir END
+      let contents = execute('call Console.debug(''foo bar'')', '')
       Assert Equals(split(contents, '\r\?\n'), [])
 
       let messages = s:messages()
@@ -199,9 +190,7 @@ Describe Vim.Console
 
   Describe .info({msg})
     It echomsg a message
-      redir => contents
-      call Console.info('foo bar')
-      redir END
+      let contents = execute('call Console.info("foo bar")', '')
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
 
       let messages = s:messages()
@@ -209,18 +198,14 @@ Describe Vim.Console
     End
 
     It sets v:statusmsg
-      redir => contents
       call Console.info('foo bar')
-      redir END
       Assert Equals(v:statusmsg, 'foo bar')
     End
   End
 
   Describe .warn({msg})
     It echomsg a message
-      redir => contents
-      call Console.warn('foo bar')
-      redir END
+      let contents = execute('call Console.warn("foo bar")', '')
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
 
       let messages = s:messages()
@@ -228,18 +213,14 @@ Describe Vim.Console
     End
 
     It sets v:warningmsg
-      redir => contents
       call Console.warn('foo bar')
-      redir END
       Assert Equals(v:warningmsg, 'foo bar')
     End
   End
 
   Describe .error({msg})
     It echomsg a message
-      redir => contents
-      call Console.error('foo bar')
-      redir END
+      let contents = execute('call Console.error("foo bar")', '')
       Assert Equals(split(contents, '\r\?\n'), ['foo bar'])
 
       let messages = s:messages()
@@ -247,9 +228,7 @@ Describe Vim.Console
     End
 
     It sets v:errmsg
-      redir => contents
       call Console.error('foo bar')
-      redir END
       Assert Equals(v:errmsg, 'foo bar')
     End
   End
