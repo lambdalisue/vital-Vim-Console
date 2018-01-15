@@ -1,6 +1,6 @@
 *Vital/Vim/Console.txt*				echo/echomsg/input library
 
-Version: 3.0.0-dev
+Version: 3.0.0
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 8.0.0000 and above
@@ -144,6 +144,10 @@ CHANGELOG				*Vital.Vim.Console-changelog*
 	- Add info() method to document
 2.0.0	2017-01-12
 	- Change API interface
+3.0.0	2018-01-16
+	- Change minimum Vim/Neovim version
+	- Add unittests for methods which requires user input
+	- Remove obsolute methods/features
 
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
