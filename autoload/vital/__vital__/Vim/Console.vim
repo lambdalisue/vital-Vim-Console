@@ -2,13 +2,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:t_string = type('')
-let s:STATUS_BATCH = 'batch'
 
 
 function! s:_vital_created(module) abort
-  let a:module.STATUS_BATCH = s:STATUS_BATCH
-  lockvar a:module.STATUS_BATCH
-  let a:module.status = ''
   let a:module.prefix = ''
 endfunction
 
@@ -41,9 +37,6 @@ function! s:echomsg(msg, ...) abort dict
 endfunction
 
 function! s:input(hl, msg, ...) abort dict
-  if s:_is_status_batch(self)
-    return ''
-  endif
   let msg = s:_ensure_string(a:msg)
   let msg = s:_assign_prefix(a:msg, self.prefix)
   let text = get(a:000, 0, '')
@@ -71,9 +64,6 @@ function! s:input(hl, msg, ...) abort dict
 endfunction
 
 function! s:inputlist(hl, textlist) abort dict
-  if s:_is_status_batch(self)
-    return 0
-  endif
   let textlist = map(copy(a:textlist), 's:_ensure_string(v:val)')
   execute 'echohl' a:hl
   call inputsave()
@@ -108,9 +98,6 @@ function! s:error(msg) abort dict
 endfunction
 
 function! s:ask(...) abort dict
-  if s:_is_status_batch(self)
-    return ''
-  endif
   let result = call('s:input', ['Question'] + a:000, self)
   redraw
   return result
@@ -118,9 +105,6 @@ endfunction
 
 function! s:select(msg, candidates, ...) abort dict
   let canceled = get(a:000, 0, '')
-  if s:_is_status_batch(self)
-    return canceled
-  endif
   let candidates = map(
         \ copy(a:candidates),
         \ 'v:key+1 . ''. '' . s:_ensure_string(v:val)'
@@ -131,9 +115,6 @@ function! s:select(msg, candidates, ...) abort dict
 endfunction
 
 function! s:confirm(msg, ...) abort dict
-  if s:_is_status_batch(self)
-    return 0
-  endif
   let default = get(a:000, 0, '')
   if default !~? '^\%(y\%[es]\|n\%[o]\|\)$'
     throw 'vital: Vim.Console: An invalid default value has specified.'
@@ -195,13 +176,6 @@ endif
 
 function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
   return filter(['yes', 'no'], 'v:val =~# ''^'' . a:arglead')
-endfunction
-
-function! s:_is_status_batch(module) abort
-  if a:module.status ==# s:STATUS_BATCH
-    return 1
-  endif
-  return 0
 endfunction
 
 function! s:_ensure_string(x) abort

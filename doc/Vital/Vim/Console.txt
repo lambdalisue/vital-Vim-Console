@@ -70,16 +70,12 @@ input({hl}, {msg}[, {text}, {completion}])
 	typeahead.
 	Not like a native |input()|, the {completion} can be a |Funcref|
 	which returns a list. Refer to |:command-completion| for detail.
-	It does nothing and returns an empty string when
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.inputlist()*
 inputlist({hl}, {textlist}])
 	Execute |:inputlist| with {hl} (|highlight-groups|).
 	|inputsave()| and |inputrestore()| are used internally to guard
 	typeahead.
-	It does nothing and returns 0 when
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.debug()*
 debug({msg})
@@ -104,16 +100,12 @@ error({msg})
 					*Vital.Vim.Console.ask()*
 ask({msg}[, {default}, {completion}])
 	Ask {msg} to users with |hl-Question| highlight group..
-	It does nothing and returns an empty string when
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.select()*
 select({msg}, {candidates}[, {canceled}])
 	Ask users to select one of the {candidates} with |hl-Question|
 	highlight group.
 	When user cancel, the value of {canceled} is returned.
-	It does nothing and returns {canceled} when
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.confirm()*
 confirm({msg}[, {default}])
@@ -122,8 +114,6 @@ confirm({msg}[, {default}])
 	The {default} can be 'y\%[es]', 'n\%[o]', or an empty string.
 	This value is used when user hit <CR> without input anything.
 	It throws an exception when {default} is not one of the listed.
-	It does nothing and returns 0 when
-	|Vital.Vim.Console.status| is |Vital.Vim.Console.STATUS_BATCH|.
 
 					*Vital.Vim.Console.capture()*
 capture({command})
@@ -143,15 +133,6 @@ VARIABLES				*Vital.Vim.Console-variables*
 prefix
 	A prefix string used when message. An empty value i  assigned in
 	default.
-
-					*Vital.Vim.Console.status*
-status
-	Current status of the console. An empty value is assigned in default.
-	
-					*Vital.Vim.Console.STATUS_BATCH*
-STATUS_BATCH
-	Assign this constant value to |Vital.Vim.Console.status| to set batch
-	mode.
 	
 
 ==============================================================================

@@ -30,7 +30,6 @@ Describe Vim.Console
   Before
     let Console = vital#vital#import('Vim.Console')
     let Console.prefix = ''
-    let Console.status = Console.STATUS_BATCH
     call Console.clear()
     set verbose=0
   End
@@ -124,13 +123,42 @@ Describe Vim.Console
   End
 
   Describe .input({hl}, {msg}[, {text}, {complete}])
-    It returns '' while status is STATUS_BATCH
+    It returns a given string
+      call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
+      Assert Equals(Console.input('None', 'foo'), 'Hello World')
+    End
+
+    It returns an empty string if user hit <CR> immediately
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
       Assert Equals(Console.input('None', 'foo'), '')
+    End
+
+    It returns 0 if user hit <Esc>
+      call timer_start(0, { -> feedkeys('Hello World' . "\<Esc>", 't') })
+      Assert Equals(Console.input('None', 'foo'), 0)
     End
   End
 
   Describe .inputlist({hl}, {textlist})
-    It returns 0 while status is STATUS_BATCH
+    It returns a selected index
+      call timer_start(0, { -> feedkeys('1' . "\<CR>", 't') })
+      Assert Equals(Console.inputlist('None', ['foo', 'bar']), 1)
+      call timer_start(0, { -> feedkeys('2' . "\<CR>", 't') })
+      Assert Equals(Console.inputlist('None', ['foo', 'bar']), 2)
+    End
+
+    It returns a given number
+      call timer_start(0, { -> feedkeys('100' . "\<CR>", 't') })
+      Assert Equals(Console.inputlist('None', ['foo', 'bar']), 100)
+    End
+
+    It returns 0 if nothing has given
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
+      Assert Equals(Console.inputlist('None', ['foo', 'bar']), 0)
+    End
+
+    It returns 0 if non number has given
+      call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
       Assert Equals(Console.inputlist('None', ['foo', 'bar']), 0)
     End
   End
@@ -227,19 +255,103 @@ Describe Vim.Console
   End
 
   Describe .ask({msg}[, {text}, {complete}])
-    It returns '' while status is STATUS_BATCH
+    It returns a given string
+      call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
+      Assert Equals(Console.ask('foo'), 'Hello World')
+    End
+
+    It returns an empty string if user hit <CR> immediately
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
       Assert Equals(Console.ask('foo'), '')
+    End
+
+    It returns 0 if user hit <Esc>
+      call timer_start(0, { -> feedkeys('Hello World' . "\<Esc>", 't') })
+      Assert Equals(Console.ask('foo'), 0)
     End
   End
 
   Describe .select({msg}, {candidates}[, {canceled}])
-    It returns {canceled} while status is STATUS_BATCH
-      Assert Equals(Console.select('foo', ['foo', 'bar']), '')
+    It returns a selected candidate string
+      call timer_start(0, { -> feedkeys('1' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), 'foo')
+      call timer_start(0, { -> feedkeys('2' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), 'bar')
+    End
+
+    " It returns a given number
+    "   call timer_start(0, { -> feedkeys('100' . "\<CR>", 't') })
+    "   Assert Equals(Console.select('hello', ['foo', 'bar']), 100)
+    " End
+
+    It returns {cancel} if nothing has given
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), '')
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar'], 0), 0)
+    End
+
+    It returns {cancel} if non number has given
+      call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), '')
+      call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar'], 0), 0)
     End
   End
 
   Describe .confirm({msg}[, {text}])
-    It returns 0 while status is STATUS_BATCH
+    It returns 1 if user answer y/ye/yes
+      call timer_start(0, { -> feedkeys('y' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('Y' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('ye' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('Ye' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('YE' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('yes' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('Yes' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('YES' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+    End
+
+    It returns 0 if user answer n/no
+      call timer_start(0, { -> feedkeys('n' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+      call timer_start(0, { -> feedkeys('N' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+      call timer_start(0, { -> feedkeys('no' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+      call timer_start(0, { -> feedkeys('No' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+      call timer_start(0, { -> feedkeys('NO' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+    End
+
+    It returns 0 if user hit <Esc>
+      call timer_start(0, { -> feedkeys('y' . "\<Esc>", 't') })
+      Assert Equals(Console.confirm('foo'), 0)
+    End
+
+    It uses {default} to determine 1/0 if user hit <CR> immediately
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
+      Assert Equals(Console.confirm('foo', 'y'), 1)
+      call timer_start(0, { -> feedkeys("\<CR>", 't') })
+      Assert Equals(Console.confirm('foo', 'n'), 0)
+    End
+
+    It repeats asking until user answer y/n
+      call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
+      call timer_start(0, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(0, { -> feedkeys('y' . "\<CR>", 't') })
+      Assert Equals(Console.confirm('foo'), 1)
+      call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
+      call timer_start(0, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(0, { -> feedkeys('n' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 0)
     End
   End
