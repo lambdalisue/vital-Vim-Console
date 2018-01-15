@@ -27,8 +27,8 @@ Describe Vim.Console
   Before
     let Console = vital#vital#import('Vim.Console')
     let Console.prefix = ''
-    call Console.clear()
-    set verbose=0
+    message clear
+    set verbose&
   End
 
   Describe .echo({msg}[, {hl}])
@@ -155,18 +155,6 @@ Describe Vim.Console
     It returns 0 if non number has given
       call timer_start(0, { -> feedkeys('Hello World' . "\<CR>", 't') })
       Assert Equals(Console.inputlist('None', ['foo', 'bar']), 0)
-    End
-  End
-
-  Describe .clear()
-    It fills up messages with empty strings
-      echomsg 'foo'
-      echomsg 'foo'
-      echomsg 'foo'
-      echomsg 'foo'
-      call Console.clear()
-      let messages = s:messages()
-      Assert Equals(len(messages), 0)
     End
   End
 
@@ -334,12 +322,6 @@ Describe Vim.Console
       call timer_start(0, { -> feedkeys('b' . "\<CR>", 't') })
       call timer_start(0, { -> feedkeys('n' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 0)
-    End
-  End
-
-  Describe .capture({command})
-    It return messages of {command}
-      Assert Equals(Console.capture('echo "Hello"'), ['', 'Hello'])
     End
   End
 End

@@ -118,16 +118,6 @@ confirm({msg}[, {default}])
 	This value is used when user hit <CR> without input anything.
 	It throws an exception when {default} is not one of the listed.
 
-					*Vital.Vim.Console.capture()*
-capture({command})
-	Capture messages for execution {command} and return a |List|.
-	Note that this method use |redir| internally if |execute()| function
-	is not available.
-
-					*Vital.Vim.Console.clear()*
-clear()
-	Clear messages.
-
 
 ==============================================================================
 VARIABLES				*Vital.Vim.Console-variables*

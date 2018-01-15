@@ -150,37 +150,6 @@ function! s:confirm(msg, ...) abort dict
   return result =~? 'y\%[es]'
 endfunction
 
-if exists('*execute')
-  function! s:capture(command) abort
-    let content = execute(a:command)
-    return split(content, '\r\?\n', 1)
-  endfunction
-else
-  function! s:capture(command) abort
-    try
-      redir => content
-      silent execute a:command
-    finally
-      redir END
-    endtry
-    return split(content, '\r\?\n', 1)
-  endfunction
-endif
-
-if has('patch-7.4.1738')
-  function! s:clear() abort
-    messages clear
-  endfunction
-else
-  " @vimlint(EVL102, 1, l:i)
-  function! s:clear() abort
-    for i in range(201)
-      echomsg ''
-    endfor
-  endfunction
-  " @vimlint(EVL102, 0, l:i)
-endif
-
 function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
   return filter(['yes', 'no'], 'v:val =~# ''^'' . a:arglead')
 endfunction
