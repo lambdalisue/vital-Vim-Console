@@ -107,6 +107,8 @@ select({msg}, {candidates}[, {canceled}])
 	Ask users to select one of the {candidates} with |hl-Question|
 	highlight group.
 	When user cancel, the value of {canceled} is returned.
+	When user input an invalid index, the value of {canceled} is
+	returned.
 
 					*Vital.Vim.Console.confirm()*
 confirm({msg}[, {default}])

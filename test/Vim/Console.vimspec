@@ -279,10 +279,12 @@ Describe Vim.Console
       Assert Equals(Console.select('hello', ['foo', 'bar']), 'bar')
     End
 
-    " It returns a given number
-    "   call timer_start(0, { -> feedkeys('100' . "\<CR>", 't') })
-    "   Assert Equals(Console.select('hello', ['foo', 'bar']), 100)
-    " End
+    It returns {cancel} if index out of range
+      call timer_start(0, { -> feedkeys('3' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), '')
+      call timer_start(0, { -> feedkeys('100' . "\<CR>", 't') })
+      Assert Equals(Console.select('hello', ['foo', 'bar']), '')
+    End
 
     It returns {cancel} if nothing has given
       call timer_start(0, { -> feedkeys("\<CR>", 't') })

@@ -118,7 +118,7 @@ function! s:select(msg, candidates, ...) abort dict
         \)
   let result = self.inputlist('Question', [a:msg] + candidates)
   redraw
-  return result == 0 ? canceled : a:candidates[result-1]
+  return result <= 0 || result > len(a:candidates) ? canceled : a:candidates[result-1]
 endfunction
 
 function! s:confirm(msg, ...) abort dict
