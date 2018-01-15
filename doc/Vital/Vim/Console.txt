@@ -100,7 +100,7 @@ error({msg})
 
 					*Vital.Vim.Console.ask()*
 ask({msg}[, {default}, {completion}])
-	Ask {msg} to users with |hl-Question| highlight group..
+	Ask {msg} to users with |hl-Question| highlight group.
 
 					*Vital.Vim.Console.select()*
 select({msg}, {candidates}[, {canceled}])
