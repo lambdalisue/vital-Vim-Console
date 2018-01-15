@@ -62,7 +62,7 @@ Describe Vim.Console
   Describe .echon({msg}[, {hl}])
     It echon a {msg}
       let contents = execute([
-            \ 'call Console.echon("foo\nbar")',
+            \ 'redraw | call Console.echon("foo\nbar")',
             \ 'call Console.echon("foo\nbar")',
             \ 'echo ""'
             \], '')
@@ -74,7 +74,7 @@ Describe Vim.Console
     It echon a {msg} without {prefix}
       let Console.prefix = '[prefix] '
       let contents = execute([
-            \ 'call Console.echon("foo\nbar")',
+            \ 'redraw | call Console.echon("foo\nbar")',
             \ 'call Console.echon("foo\nbar")',
             \ 'echo ""'
             \], '')
@@ -135,6 +135,12 @@ Describe Vim.Console
   End
 
   Describe .inputlist({hl}, {textlist})
+    Before
+      if has('nvim')
+        Skip Neovim has a bug on inputlist() https://github.com/neovim/neovim/issues/7857
+      endif
+    End
+
     It returns a selected index
       call timer_start(0, { -> feedkeys('1' . "\<CR>", 't') })
       Assert Equals(Console.inputlist('None', ['foo', 'bar']), 1)
@@ -239,6 +245,12 @@ Describe Vim.Console
   End
 
   Describe .select({msg}, {candidates}[, {canceled}])
+    Before
+      if has('nvim')
+        Skip Neovim has a bug on inputlist() https://github.com/neovim/neovim/issues/7857
+      endif
+    End
+
     It returns a selected candidate string
       call timer_start(0, { -> feedkeys('1' . "\<CR>", 't') })
       Assert Equals(Console.select('hello', ['foo', 'bar']), 'foo')
@@ -315,12 +327,12 @@ Describe Vim.Console
 
     It repeats asking until user answer y/n
       call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
-      call timer_start(0, { -> feedkeys('b' . "\<CR>", 't') })
-      call timer_start(0, { -> feedkeys('y' . "\<CR>", 't') })
+      call timer_start(1, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(2, { -> feedkeys('y' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 1)
       call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
-      call timer_start(0, { -> feedkeys('b' . "\<CR>", 't') })
-      call timer_start(0, { -> feedkeys('n' . "\<CR>", 't') })
+      call timer_start(1, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(2, { -> feedkeys('n' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 0)
     End
   End
