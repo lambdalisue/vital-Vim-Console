@@ -52,15 +52,9 @@ function! s:input(hl, msg, ...) abort dict
   execute 'echohl' a:hl
   call inputsave()
   try
-    execute printf(
-          \ 'silent cnoremap <buffer> <Esc> <C-u>%s<CR>',
-          \ self.escape_marker,
-          \)
-    let result = call('input', [msg, text] + args)
-    return result ==# self.escape_marker ? 0 : result
+    return call('s:_input', [msg, text] + args, self)
   finally
-    redraw
-    silent cunmap <buffer> <Esc>
+    redraw | echo ''
     echohl None
     call inputrestore()
   endtry
@@ -73,6 +67,7 @@ function! s:inputlist(hl, textlist) abort dict
   try
     return inputlist(textlist)
   finally
+    redraw | echo ''
     echohl None
     call inputrestore()
   endtry
@@ -118,32 +113,49 @@ function! s:select(msg, candidates, ...) abort dict
 endfunction
 
 function! s:confirm(msg, ...) abort dict
-  let default = get(a:000, 0, '')
-  if default !~? '^\%(y\%[es]\|n\%[o]\|\)$'
-    throw 'vital: Vim.Console: An invalid default value has specified.'
-  endif
-  let choices = default =~? 'y\%[es]'
-        \ ? 'Y[es]/n[o]'
-        \ : default =~? 'n\%[o]'
-        \   ? 'y[es]/N[o]'
-        \   : 'y[es]/n[o]'
-  let result = 'invalid'
-  while result !~? '^\%(y\%[es]\|n\%[o]\)$'
-    let result = self.input(
-          \ 'Question',
-          \ printf('%s (%s): ', a:msg, choices),
-          \ '',
-          \ function('s:_confirm_complete'),
-          \)
-    if type(result) != s:t_string
-      redraw | echo ''
-      call self.echo('Canceled.', 'WarningMsg')
-      return 0
+  call inputsave()
+  echohl Question
+  try
+    let default = get(a:000, 0, '')
+    if default !~? '^\%(y\%[es]\|n\%[o]\|\)$'
+      throw 'vital: Vim.Console: An invalid default value has specified.'
     endif
-    let result = empty(result) ? default : result
-  endwhile
-  redraw | echo ''
-  return result =~? 'y\%[es]'
+    let choices = default =~? 'y\%[es]'
+          \ ? 'Y[es]/n[o]'
+          \ : default =~? 'n\%[o]'
+          \   ? 'y[es]/N[o]'
+          \   : 'y[es]/n[o]'
+    let result = 'invalid'
+    let prompt = printf('%s (%s): ', a:msg, choices)
+    let completion = 'customlist,' . get(function('s:_confirm_complete'), 'name')
+    while result !~? '^\%(y\%[es]\|n\%[o]\)$'
+      let result = call('s:_input', [prompt, '', completion], self)
+      if type(result) != s:t_string
+        redraw | echo ''
+        call self.echo('Canceled.', 'WarningMsg')
+        return 0
+      endif
+      let result = empty(result) ? default : result
+    endwhile
+    redraw | echo ''
+    return result =~? 'y\%[es]'
+  finally
+    echohl None
+    call inputrestore()
+  endtry
+endfunction
+
+function! s:_input(...) abort dict
+  try
+    execute printf(
+          \ 'silent cnoremap <buffer> <Esc> <C-u>%s<CR>',
+          \ self.escape_marker,
+          \)
+    let result = call('input', a:000)
+    return result ==# self.escape_marker ? 0 : result
+  finally
+    silent cunmap <buffer> <Esc>
+  endtry
 endfunction
 
 function! s:_confirm_complete(arglead, cmdline, cursorpos) abort
