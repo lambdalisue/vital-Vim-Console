@@ -327,12 +327,12 @@ Describe Vim.Console
 
     It repeats asking until user answer y/n
       call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
-      call timer_start(1, { -> feedkeys('b' . "\<CR>", 't') })
-      call timer_start(2, { -> feedkeys('y' . "\<CR>", 't') })
+      call timer_start(100, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(200, { -> feedkeys('y' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 1)
       call timer_start(0, { -> feedkeys('a' . "\<CR>", 't') })
-      call timer_start(1, { -> feedkeys('b' . "\<CR>", 't') })
-      call timer_start(2, { -> feedkeys('n' . "\<CR>", 't') })
+      call timer_start(100, { -> feedkeys('b' . "\<CR>", 't') })
+      call timer_start(200, { -> feedkeys('n' . "\<CR>", 't') })
       Assert Equals(Console.confirm('foo'), 0)
     End
   End
